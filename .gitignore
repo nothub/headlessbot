@@ -1,0 +1,38 @@
+# ignore all files
+*
+# but include directories
+!*/
+
+# git
+!/**/.gitkeep
+!/.gitattributes
+!/.gitignore
+!/.gitmodules
+
+# java
+!/src/**
+
+# gradle
+!/build.gradle
+!/gradle.properties
+!/settings.gradle
+# gradle wrapper
+!/gradle/**
+!/gradlew
+!/gradlew.bat
+
+#docker
+!/docker/scripts/**
+!/docker/.dockerignore
+!/docker/Dockerfile
+!/docker/headless.json
+!/docker/mods.md5
+
+# scripts
+!/scripts/**
+
+# misc
+!/.github/**
+!/*.md
+!/.editorconfig
+!/LICENSE

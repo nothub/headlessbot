@@ -1,0 +1,49 @@
+name: "release"
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Git
+        uses: actions/checkout@v2
+
+      - name: Java
+        uses: actions/setup-java@v2.1.0
+        with:
+          distribution: 'adopt'
+          java-version: '8'
+
+      - name: Cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: '${{ runner.os }}-m2-${{ hashFiles(''**/pom.xml'') }}'
+          restore-keys: '${{ runner.os }}-m2'
+
+      - name: Package
+        run: ./gradlew build --stacktrace
+
+      - name: Draft
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          body: 'automated release at commit ${{ github.sha }}'
+          draft: false
+          prerelease: false
+
+      - name: Release
+        uses: csexton/release-asset-action@v2
+        with:
+          pattern: "build/libs/*-release.jar"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          release-url: ${{ steps.create_release.outputs.upload_url }}

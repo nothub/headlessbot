@@ -1,0 +1,105 @@
+buildscript {
+    repositories {
+        //jcenter()
+        maven { url = "https://plugins.gradle.org/m2/" }
+        maven { url = "https://maven.minecraftforge.net" }
+        maven { url = 'https://repo.spongepowered.org/repository/maven-public' }
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
+        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
+    }
+}
+
+plugins {
+    id 'java'
+}
+
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'org.spongepowered.mixin'
+
+group = project.mod_group
+archivesBaseName = project.mod_name
+version = project.mod_version
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(8)
+
+minecraft {
+    mappings channel: 'stable', version: '39-1.12'
+}
+
+configurations {
+    jarLibs
+}
+
+
+repositories {
+    mavenCentral()
+    maven { url 'https://repo.spongepowered.org/repository/maven-public' }
+    maven { url 'https://impactdevelopment.github.io/maven/' }
+    maven { url "https://maven-eclipse.github.io/maven" }
+    maven { url "https://jitpack.io" }
+}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2854'
+    jarLibs("org.spongepowered:mixin:0.7.11-SNAPSHOT") {
+        exclude module: 'launchwrapper'
+        exclude module: 'guava'
+        exclude module: 'gson'
+        exclude module: 'commons-io'
+    }
+    // lol why does this work and is there a better way?
+    // https://github.com/kami-blue/client/blob/5a9e51a124cf18ec2e73b63a8dc2e2fbb0d3a43a/build.gradle#L112
+    annotationProcessor('org.spongepowered:mixin:0.8.2:processor') {
+        exclude module: 'gson'
+    }
+    jarLibs 'cabaletta:baritone-api:1.2'
+    jarLibs 'cc.neckbeard:java-utils:1.3.0'
+    compileOnly 'com.google.code.gson:gson:2.8.7'
+    compileOnly 'org.jetbrains:annotations:21.0.1'
+    compileOnly 'com.github.3arthqu4ke:HeadlessForge:1.1'
+    implementation configurations.jarLibs
+}
+
+processResources {
+    inputs.property "version", project.version
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        expand 'version': project.version
+    }
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
+
+mixin {
+    defaultObfuscationEnv 'searge'
+    add sourceSets.main, 'mixins.headlessbot.refmap.json'
+}
+
+sourceSets {
+    main {
+        ext.refMap = "mixins.headlessbot.refmap.json"
+    }
+}
+
+jar {
+    manifest {
+        attributes(
+            'MixinConfigs': 'mixins.headlessbot.json',
+            'tweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
+            'TweakOrder': 0,
+            'FMLCorePluginContainsFMLMod': 'true',
+            'FMLCorePlugin': 'not.hub.headlessbot.MixinLoaderForge',
+            'ForceLoadAsMod': 'true'
+        )
+    }
+    from {
+        configurations.jarLibs.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+}
+
+jar.finalizedBy('reobfJar')

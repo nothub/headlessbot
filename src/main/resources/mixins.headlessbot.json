@@ -1,0 +1,10 @@
+{
+  "required": true,
+  "package": "not.hub.headlessbot.mixins",
+  "refmap": "mixins.headlessbot.refmap.json",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "IMinecraft",
+    "MixinNetworkManager"
+  ]
+}
