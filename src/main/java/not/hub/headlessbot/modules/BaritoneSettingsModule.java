@@ -42,6 +42,10 @@ public class BaritoneSettingsModule extends Module {
             settings.allowDiagonalDescend.value = true;
             settings.allowDiagonalAscend.value = true;
 
+            // assume no jesus as default
+            settings.assumeWalkOnWater.value = false;
+            settings.assumeWalkOnLava.value = false;
+
             settings.allowDownward.value = false; // this creates more natural pathes (staircases etc.)
             settings.allowVines.value = true;
             settings.allowWalkOnBottomSlab.value = true;
@@ -53,6 +57,7 @@ public class BaritoneSettingsModule extends Module {
 
             settings.replantCrops.value = true;
             settings.replantNetherWart.value = true;
+
             settings.mineScanDroppedItems.value = true;
             settings.legitMine.value = false;
 
@@ -94,10 +99,10 @@ public class BaritoneSettingsModule extends Module {
          *     public final Settings$Setting<Boolean> allowSprint;
          *     public final Settings$Setting<Boolean> sprintInWater;
          *
-         *       TODO: spawn/util mode
-         *     public final Settings$Setting<Double> followOffsetDistance;
-         *     public final Settings$Setting<Float> followOffsetDirection;
-         *     public final Settings$Setting<Integer> followRadius;
+         *       TODO: check for armor and weapons
+         *     public final Settings$Setting<Boolean> avoidance;
+         *     public final Settings$Setting<Integer> mobSpawnerAvoidanceRadius;
+         *     public final Settings$Setting<Integer> mobAvoidanceRadius;
          *
          *       TODO: sync from module states
          *     public final Settings$Setting<Integer> maxFallHeightNoWater;
@@ -107,6 +112,11 @@ public class BaritoneSettingsModule extends Module {
          *     public final Settings$Setting<Boolean> assumeWalkOnLava;
          *     public final Settings$Setting<Boolean> assumeStep;
          *     public final Settings$Setting<Boolean> assumeSafeWalk;
+         *
+         *       TODO: follow mode
+         *     public final Settings$Setting<Double> followOffsetDistance;
+         *     public final Settings$Setting<Float> followOffsetDirection;
+         *     public final Settings$Setting<Integer> followRadius;
          *
          *       TODO: builder mode
          *     public final Settings$Setting<Boolean> buildInLayers;
@@ -118,10 +128,6 @@ public class BaritoneSettingsModule extends Module {
          *     public final Settings$Setting<Boolean> schematicOrientationY;
          *     public final Settings$Setting<Boolean> schematicOrientationZ;
          *
-         *       TODO: check for armor and weapons
-         *     public final Settings$Setting<Boolean> avoidance;
-         *     public final Settings$Setting<Integer> mobSpawnerAvoidanceRadius;
-         *     public final Settings$Setting<Integer> mobAvoidanceRadius;
          */
 
     }
