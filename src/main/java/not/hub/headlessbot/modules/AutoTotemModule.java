@@ -9,7 +9,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 public class AutoTotemModule extends Module {
 
     public AutoTotemModule() {
-        super(Type.ALWAYS_ACTIVE);
+        super();
     }
 
     @SubscribeEvent

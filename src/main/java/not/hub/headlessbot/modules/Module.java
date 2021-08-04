@@ -1,20 +1,20 @@
 package not.hub.headlessbot.modules;
 
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
+import not.hub.headlessbot.MC;
 
-public abstract class Module {
-
-    static final Minecraft mc = Minecraft.getMinecraft();
+public abstract class Module implements MC {
 
     public final String name;
-    public final Type type;
 
     private boolean active = false;
 
-    public Module(Type type) {
+    public Module() {
         this.name = getClass().getSimpleName().toLowerCase().replaceAll("module", "");
-        this.type = type;
+    }
+
+    public Module(String name) {
+        this.name = name;
     }
 
     public void activate() {
@@ -39,11 +39,6 @@ public abstract class Module {
 
     public boolean isActive() {
         return active;
-    }
-
-    public enum Type {
-        ALWAYS_ACTIVE,
-        SITUATIONAL
     }
 
 }

@@ -17,7 +17,7 @@ public class ChatCommandsModule extends Module {
     Pattern tpa = Pattern.compile("^([a-zA-Z0-9_]{3,16}) wants to teleport to you\\.$");
 
     public ChatCommandsModule() {
-        super(Type.ALWAYS_ACTIVE);
+        super();
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

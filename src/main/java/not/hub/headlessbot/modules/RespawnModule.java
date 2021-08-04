@@ -18,7 +18,7 @@ public class RespawnModule extends Module {
     private static final ExpiringFlag messageCooldown = new ExpiringFlag(1, ChronoUnit.MINUTES, false);
 
     public RespawnModule() {
-        super(Type.ALWAYS_ACTIVE);
+        super();
         messages.add("Fuck dude...");
         messages.add("Wtf is this shit?");
         messages.add("Damn man, again...");

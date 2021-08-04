@@ -5,7 +5,6 @@ import baritone.api.pathing.goals.Goal;
 import baritone.api.pathing.goals.GoalXZ;
 import baritone.api.utils.BlockOptionalMeta;
 import cc.neckbeard.utils.ExpiringFlag;
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -27,7 +26,7 @@ public class WalkingSimulatorModule extends Module {
     private final ExpiringFlag baritoneGoalDelay = new ExpiringFlag(5, ChronoUnit.SECONDS);
 
     public WalkingSimulatorModule() {
-        super(Type.ALWAYS_ACTIVE);
+        super();
     }
 
     @SubscribeEvent
@@ -40,7 +39,7 @@ public class WalkingSimulatorModule extends Module {
         if (mc.getCurrentServerData() == null) return;
 
         // in 2b queue
-        final BlockPos pos = Minecraft.getMinecraft().player.getPosition();
+        final BlockPos pos = mc.player.getPosition();
         if (mc.getCurrentServerData().serverIP.equals("2b2t.org")
             && pos.getX() == 0
             && pos.getY() == 240

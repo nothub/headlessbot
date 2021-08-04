@@ -17,7 +17,7 @@ public class ChatSpamModule extends Module {
     private static final ExpiringFlag cooldown = new ExpiringFlag(5, ChronoUnit.MINUTES, true);
 
     public ChatSpamModule() {
-        super(Type.ALWAYS_ACTIVE);
+        super();
         messages.add("Hey bitches whats up?");
         messages.add("I live at spawn, visit me at 420 ;>");
         messages.add("Who has no head but can speak anyways?");

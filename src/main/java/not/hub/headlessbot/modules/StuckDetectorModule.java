@@ -14,7 +14,7 @@ public class StuckDetectorModule extends Module {
     private static int lastZ;
 
     public StuckDetectorModule() {
-        super(Type.ALWAYS_ACTIVE);
+        super();
     }
 
     @SubscribeEvent

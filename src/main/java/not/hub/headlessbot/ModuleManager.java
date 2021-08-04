@@ -4,9 +4,7 @@ import not.hub.headlessbot.modules.*;
 
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ModuleManager {
@@ -18,8 +16,6 @@ public class ModuleManager {
         add(new BaritoneSettingsModule());
         add(new ChatCommandsModule());
         add(new ChatSpamModule());
-        add(new LoginModule());
-        add(new ReconnectModule());
         add(new RespawnModule());
         add(new StuckDetectorModule());
         add(new WalkingSimulatorModule());
@@ -27,10 +23,6 @@ public class ModuleManager {
 
     public static Stream<? extends Module> getModules() {
         return modules.values().stream();
-    }
-
-    public static Set<Module> getAll(Module.Type type) {
-        return getModules().filter(m -> m.type == type).collect(Collectors.toSet());
     }
 
     public static Module get(Class<? extends Module> module) {

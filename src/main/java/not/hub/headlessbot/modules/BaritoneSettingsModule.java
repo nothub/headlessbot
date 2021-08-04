@@ -13,7 +13,7 @@ public class BaritoneSettingsModule extends Module {
     private boolean initialized = false;
 
     public BaritoneSettingsModule() {
-        super(Type.ALWAYS_ACTIVE);
+        super();
     }
 
     @SubscribeEvent
