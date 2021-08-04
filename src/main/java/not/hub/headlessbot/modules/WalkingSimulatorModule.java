@@ -3,6 +3,7 @@ package not.hub.headlessbot.modules;
 import baritone.api.BaritoneAPI;
 import baritone.api.pathing.goals.Goal;
 import baritone.api.pathing.goals.GoalXZ;
+import baritone.api.utils.BlockOptionalMeta;
 import cc.neckbeard.utils.ExpiringFlag;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.BlockPos;
@@ -62,9 +63,21 @@ public class WalkingSimulatorModule extends Module {
             // TODO: this is wonky and triggers 20-30 times before baritone actually starts walking
             if (baritoneGoalDelay.isValid()) return;
             if (!BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().isPathing()) {
-                final Goal goal = randomGoal(420, 420, 128);
-                BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(goal);
-                Log.info(name, "I am going to: " + goal);
+                switch (mc.player.dimension) {
+                    case 0:  // Overworld
+                        BaritoneAPI.getProvider().getPrimaryBaritone().getGetToBlockProcess().getToBlock(new BlockOptionalMeta("portal"));
+                        Log.info(name, "Searching for a nether portal...");
+                        break;
+                    case -1:  // Nether
+                        final Goal netherGoal = randomGoal(0, 0, 128);
+                        BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(netherGoal);
+                        Log.info(name, "Going to nether coords: " + netherGoal);
+                        break;
+                    case 1:  // End
+                        BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(randomGoal(mc.player.getPosition().getX(), mc.player.getPosition().getZ(), 128));
+                        Log.info(name, "Chilling in the end...");
+                        break;
+                }
                 baritoneGoalDelay.reset();
             }
         } catch (NoClassDefFoundError | NullPointerException ex) {
