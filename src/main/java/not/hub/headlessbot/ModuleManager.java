@@ -14,12 +14,14 @@ public class ModuleManager {
     private static final Map<Class<? extends Module>, Module> modules = new ConcurrentHashMap<>();
 
     static {
-        modules.put(AutoTotemModule.class, new AutoTotemModule());
-        modules.put(ChatCommandsModule.class, new ChatCommandsModule());
-        modules.put(ChatSpamModule.class, new ChatSpamModule());
-        modules.put(LoginModule.class, new LoginModule());
-        modules.put(RespawnModule.class, new RespawnModule());
-        modules.put(WalkingSimulatorModule.class, new WalkingSimulatorModule());
+        add(new AutoTotemModule());
+        add(new BaritoneSettingsModule());
+        add(new ChatCommandsModule());
+        add(new ChatSpamModule());
+        add(new LoginModule());
+        add(new RespawnModule());
+        add(new StuckDetectorModule());
+        add(new WalkingSimulatorModule());
     }
 
     public static Stream<? extends Module> getModules() {
@@ -32,6 +34,10 @@ public class ModuleManager {
 
     public static Module get(Class<? extends Module> module) {
         return Optional.of(modules.get(module)).orElseThrow(IllegalStateException::new);
+    }
+
+    private static void add(Module module) {
+        modules.put(module.getClass(), module);
     }
 
 }
