@@ -52,7 +52,7 @@ dependencies {
         exclude module: 'gson'
     }
     // For some reason the api at v1.2.15 exposes remapped values and breaks the build, so we use v1.2.14
-    implementation 'com.github.cabaletta:baritone:v1.2.14'
+    implementation 'com.github.cabaletta:baritone:v1.3.5'
     jarLibs 'cc.neckbeard:java-utils:1.3.0'
     compileOnly 'com.google.code.gson:gson:2.8.7'
     compileOnly 'org.jetbrains:annotations:21.0.1'
