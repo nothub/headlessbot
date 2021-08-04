@@ -1,9 +1,9 @@
 package not.hub.headlessbot.modules;
 
 import baritone.api.BaritoneAPI;
+import baritone.api.event.events.ChatEvent;
 import baritone.api.pathing.goals.Goal;
 import baritone.api.pathing.goals.GoalXZ;
-import baritone.api.utils.BlockOptionalMeta;
 import cc.neckbeard.utils.ExpiringFlag;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.BlockPos;
@@ -60,12 +60,15 @@ public class WalkingSimulatorModule extends Module {
 
         // baritone
         try {
-            // TODO: this is wonky and triggers 20-30 times before baritone actually starts walking
             if (baritoneGoalDelay.isValid()) return;
             if (!BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().isPathing()) {
                 switch (mc.player.dimension) {
                     case 0:  // Overworld
-                        BaritoneAPI.getProvider().getPrimaryBaritone().getGetToBlockProcess().getToBlock(new BlockOptionalMeta("portal"));
+                        // For some reason the api exposes remapped values and breaks these calls:
+                        //BaritoneAPI.getProvider().getPrimaryBaritone().getCommandManager().execute("goto portal");
+                        //BaritoneAPI.getProvider().getPrimaryBaritone().getGetToBlockProcess().getToBlock(new BlockOptionalMeta("portal"));
+                        // We do this dumb shit instead:
+                        BaritoneAPI.getProvider().getPrimaryBaritone().getGameEventHandler().onSendChatMessage(new ChatEvent( BaritoneAPI.getSettings().prefix.value + "goto portal"));
                         Log.info(name, "Searching for a nether portal...");
                         break;
                     case -1:  // Nether

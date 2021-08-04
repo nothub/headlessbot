@@ -67,11 +67,11 @@ public class BaritoneSettingsModule extends Module {
             settings.buildIgnoreExisting.value = true;
             settings.okIfWater.value = true;
 
-            // we dont need this
-            settings.chatDebug.value = false;
+            settings.chatDebug.value = true;
+            settings.echoCommands.value = true;
+            settings.prefixControl.value = true;
             settings.chatControl.value = false;
             settings.chatControlAnyway.value = false;
-            settings.echoCommands.value = true;
 
             // we dont see this stuff anyways
             settings.renderPath.value = false;

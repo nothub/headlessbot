@@ -5,7 +5,7 @@ MC_PATH=~/.minecraft
 FORGE_VER=1.12.2-forge-14.23.5.2854
 
 cd "$(dirname "${BASH_SOURCE[0]}")"/..
-./gradlew clean build --stacktrace
+./gradlew clean jar --stacktrace
 
 cd docker
 if [ ! -d mc ]; then
