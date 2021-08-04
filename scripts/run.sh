@@ -3,6 +3,8 @@ set -eo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")"/../docker
 
+cp ../build/libs/headlessbot-*.jar mc/mods/
+
 docker --version || sudo su
 
 docker rmi -f mc-headless:dev
