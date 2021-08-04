@@ -6,7 +6,6 @@ import com.mojang.authlib.exceptions.AuthenticationException;
 import com.mojang.authlib.exceptions.AuthenticationUnavailableException;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 import com.mojang.authlib.yggdrasil.YggdrasilUserAuthentication;
-import me.earth.headlessforge.util.NetworkUtil;
 import net.minecraft.util.Session;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -22,20 +21,24 @@ import static not.hub.headlessbot.Bot.CONFIG;
 
 public class LoginModule extends Module {
 
-    // TODO: split login and server connection
     // TODO: save session to file
 
     private static final ExpiringFlag cooldown = new ExpiringFlag(5, ChronoUnit.MINUTES, false);
 
+    private static boolean loggedIn = false; // TODO: replace with check via session object
+
     public LoginModule() {
         super(Type.SITUATIONAL);
+    }
+
+    public static boolean isLoggedIn() {
+        return loggedIn;
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onInitGui(GuiScreenEvent.InitGuiEvent.Post event) {
         deactivate();
         login();
-        connect();
     }
 
     private void login() {
@@ -65,11 +68,7 @@ public class LoginModule extends Module {
             Log.error(name, "Error! " + e.getMessage());
             FMLCommonHandler.instance().exitJava(1, false);
         }
-    }
-
-    private void connect() {
-        Log.info(name, CONFIG.hostname);
-        NetworkUtil.INSTANCE.connect(CONFIG.hostname);
+        loggedIn = true;
     }
 
 }

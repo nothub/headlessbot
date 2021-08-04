@@ -19,6 +19,7 @@ public class ModuleManager {
         add(new ChatCommandsModule());
         add(new ChatSpamModule());
         add(new LoginModule());
+        add(new ReconnectModule());
         add(new RespawnModule());
         add(new StuckDetectorModule());
         add(new WalkingSimulatorModule());
