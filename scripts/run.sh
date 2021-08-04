@@ -4,6 +4,16 @@ set -eo pipefail
 MC_PATH=~/.minecraft
 FORGE_VER=1.12.2-forge-14.23.5.2854
 
+if [ ! -d $MC_PATH ]; then
+  echo "Minecraft launcher is missing at path: $MC_PATH"
+  exit 1
+fi
+if [ ! -d $MC_PATH/versions/$FORGE_VER ]; then
+  echo "Forge is missing at path: $MC_PATH/versions/$FORGE_VER"
+  echo "Get it from: https://files.minecraftforge.net/net/minecraftforge/forge/index_1.12.2.html"
+  exit 1
+fi
+
 cd "$(dirname "${BASH_SOURCE[0]}")"/..
 ./gradlew clean jar --stacktrace
 
