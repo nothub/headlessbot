@@ -1,9 +1,9 @@
 package not.hub.headlessbot.modules;
 
 import baritone.api.BaritoneAPI;
-import baritone.api.event.events.ChatEvent;
 import baritone.api.pathing.goals.Goal;
 import baritone.api.pathing.goals.GoalXZ;
+import baritone.api.utils.BlockOptionalMeta;
 import cc.neckbeard.utils.ExpiringFlag;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.BlockPos;
@@ -54,7 +54,7 @@ public class WalkingSimulatorModule extends Module {
 
         // print infos
         if (!printPosition.isValid()) {
-            Log.info(name, "I am at: " + pos.getX() + "x " + pos.getY() + "y " + pos.getZ() + "z");
+            Log.info(name, "I am at: " + pos.getX() + "x " + pos.getY() + "y " + pos.getZ() + "z (" + mc.player.dimension + ")");
             printPosition.reset();
         }
 
@@ -64,11 +64,11 @@ public class WalkingSimulatorModule extends Module {
             if (!BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().isPathing()) {
                 switch (mc.player.dimension) {
                     case 0:  // Overworld
-                        // For some reason the api exposes remapped values and breaks these calls:
-                        //BaritoneAPI.getProvider().getPrimaryBaritone().getCommandManager().execute("goto portal");
-                        //BaritoneAPI.getProvider().getPrimaryBaritone().getGetToBlockProcess().getToBlock(new BlockOptionalMeta("portal"));
-                        // We do this dumb shit instead:
-                        BaritoneAPI.getProvider().getPrimaryBaritone().getGameEventHandler().onSendChatMessage(new ChatEvent( BaritoneAPI.getSettings().prefix.value + "goto portal"));
+                        if (ThreadLocalRandom.current().nextBoolean()) {
+                            BaritoneAPI.getProvider().getPrimaryBaritone().getGetToBlockProcess().getToBlock(new BlockOptionalMeta("portal"));
+                        } else {
+                            BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(randomGoal(0, 0, 256));
+                        }
                         Log.info(name, "Searching for a nether portal...");
                         break;
                     case -1:  // Nether

@@ -53,7 +53,7 @@ public class BaritoneSettingsModule extends Module {
 
             settings.considerPotionEffects.value = true;
             settings.rightClickContainerOnArrival.value = true;
-            settings.itemSaver.value = true;
+            //settings.itemSaver.value = true;
 
             settings.replantCrops.value = true;
             settings.replantNetherWart.value = true;
@@ -67,11 +67,11 @@ public class BaritoneSettingsModule extends Module {
             settings.buildIgnoreExisting.value = true;
             settings.okIfWater.value = true;
 
-            settings.chatDebug.value = true;
             settings.echoCommands.value = true;
             settings.prefixControl.value = true;
             settings.chatControl.value = false;
             settings.chatControlAnyway.value = false;
+            settings.chatDebug.value = false;
 
             // we dont see this stuff anyways
             settings.renderPath.value = false;
