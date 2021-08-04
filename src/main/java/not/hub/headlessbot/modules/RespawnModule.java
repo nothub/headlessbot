@@ -5,6 +5,7 @@ import net.minecraft.client.gui.GuiGameOver;
 import net.minecraft.network.play.client.CPacketChatMessage;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import not.hub.headlessbot.Log;
 
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
@@ -14,7 +15,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class RespawnModule extends Module {
 
     private static final Set<String> messages = new HashSet<>();
-    private static final ExpiringFlag cooldown = new ExpiringFlag(1, ChronoUnit.MINUTES, false);
+    private static final ExpiringFlag messageCooldown = new ExpiringFlag(1, ChronoUnit.MINUTES, false);
 
     public RespawnModule() {
         super(Type.ALWAYS_ACTIVE);
@@ -32,15 +33,17 @@ public class RespawnModule extends Module {
         if (mc.currentScreen instanceof GuiGameOver
             || mc.player.isDead
             || mc.player.getHealth() < 0) {
+            Log.info(name, "Respawning...");
             mc.displayGuiScreen(null);
             mc.player.respawnPlayer();
-            if (cooldown.isValid()) return;
-            else cooldown.reset();
-            mc.player.connection.sendPacket(new CPacketChatMessage(
-                messages.stream()
-                    .skip(ThreadLocalRandom.current().nextInt(messages.size()))
-                    .findAny()
-                    .orElseThrow(IllegalStateException::new)));
+            if (messageCooldown.isValid()) return;
+            else messageCooldown.reset();
+            mc.addScheduledTask(() -> mc.player.connection.sendPacket(
+                new CPacketChatMessage(
+                    messages.stream()
+                        .skip(ThreadLocalRandom.current().nextInt(messages.size()))
+                        .findAny()
+                        .orElseThrow(IllegalStateException::new))));
         }
     }
 
