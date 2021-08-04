@@ -15,7 +15,7 @@ import static not.hub.headlessbot.Bot.CONFIG;
 
 public class ReconnectModule extends Module {
 
-    private static final ExpiringFlag cooldown = new ExpiringFlag(20, ChronoUnit.SECONDS, false);
+    private static final ExpiringFlag cooldown = new ExpiringFlag(20, ChronoUnit.SECONDS, false); // TODO: reset after kick etc.
     private static boolean mcLoaded = false; // TODO: replace with check via something better
 
     public ReconnectModule() {
