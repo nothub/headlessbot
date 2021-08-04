@@ -2,7 +2,6 @@ package not.hub.headlessbot;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -18,10 +17,7 @@ public class Bot {
 
     public static final String MODID = "headlessbot";
     public static final String VERSION = "0.0.0-SNAPSHOT";
-    public static final Config CONFIG = Config.loadConfig();
-
-    @Instance(value = MODID)
-    public static Bot INSTANCE;
+    public static final Config CONFIG = Config.load();
 
     @Mod.EventHandler
     public void fmlInit(FMLPreInitializationEvent event) {
@@ -40,6 +36,7 @@ public class Bot {
         Log.info("FML init state", "POST_INIT");
 
         System.out.println("\n" +
+            "----------------------------------------------------------------" + "\n" +
             "    _,_\n" +
             "  /7/Y/^\\\n" +
             "  vuVV|C)|                         __ _\n" +
@@ -59,9 +56,9 @@ public class Bot {
             "        (                  \"-.__'\"\\_\\ \\.__.-\"./      \\ l\n" +
             "         )                  \".__\"\">>G\\ \\__.-\">        V )\n" +
             "----------------------------------------------------------------" + "\n" +
-            "Account:     " + CONFIG.username + "\n" +
-            "Server:      " + CONFIG.hostname + "\n" +
-            "Obfuscation: " + MixinEnvironment.getDefaultEnvironment().getObfuscationContext() + "\n" +
+            "Account:        " + CONFIG.username + "\n" +
+            "Server:         " + CONFIG.hostname + "\n" +
+            "Obfuscation:    " + MixinEnvironment.getDefaultEnvironment().getObfuscationContext() + "\n" +
             "Modules loaded: " + "\n" +
             ModuleManager.getModules().map(m -> "  - " + m.name).collect(Collectors.joining("\n")) + "\n" +
             "----------------------------------------------------------------");
