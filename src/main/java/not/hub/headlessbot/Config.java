@@ -24,7 +24,7 @@ public class Config {
         this.hostname = "2b2t.org";
     }
 
-    public static Config loadConfig() {
+    public static Config load() {
         Log.info("Config", "Loading from file...");
         final File file = new File("headless.json");
         try {
