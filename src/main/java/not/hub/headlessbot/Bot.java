@@ -33,7 +33,7 @@ public class Bot {
     @Mod.EventHandler
     public void fmlInit(FMLPostInitializationEvent event) {
         Log.info("FML init state", "POST_INIT");
-        FSM.transition(true);
+        if (FSM.getCurrent() == FSM.State.START) FSM.transition(true);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

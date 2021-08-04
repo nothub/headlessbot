@@ -30,9 +30,14 @@ import static not.hub.headlessbot.Bot.CONFIG;
 public class FSM implements MC {
 
     private static final Map<State, Consumer<Boolean>> transitions = new HashMap<>();
-    private static State current = State.INIT_BOT;
+    private static State current = State.START;
 
     static {
+        transitions.put(State.START, (success) -> {
+            if (success) current = State.INIT_BOT;
+            else current = State.PANIC;
+            current.run();
+        });
         transitions.put(State.INIT_BOT, (success) -> {
             if (success) current = State.LOGIN_ACCOUNT;
             else current = State.PANIC;
@@ -80,6 +85,9 @@ public class FSM implements MC {
      * FSM States
      */
     public enum State {
+        START(() -> {
+            Log.info(FSM.class, "Hello World!");
+        }),
         INIT_BOT(() -> {
             System.out.println("\n" +
                 "----------------------------------------------------------------" + "\n" +
