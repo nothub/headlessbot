@@ -74,11 +74,9 @@ public class FSM implements MC {
      * Transition to next state
      *
      * @param success success of current state
-     * @return next state
      */
-    public static State transition(boolean success) {
+    public static void transition(boolean success) {
         transitions.get(current).accept(success);
-        return current;
     }
 
     /**
