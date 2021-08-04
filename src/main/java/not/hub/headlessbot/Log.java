@@ -16,28 +16,28 @@ public class Log {
         error = modLog::error;
     }
 
-    public static void info(String module, String message) {
-        info.accept(module + ": " + message);
+    public static void info(String sender, String message) {
+        info.accept(sender + ": " + message);
     }
 
-    public static void info(Class<?> module, String message) {
-        info(module.getSimpleName(), message);
+    public static void info(Class<?> sender, String message) {
+        info(sender.getSimpleName(), message);
     }
 
-    public static void warn(String module, String message) {
-        warn.accept(module + ": " + message);
+    public static void warn(String sender, String message) {
+        warn.accept(sender + ": " + message);
     }
 
-    public static void warn(Class<?> module, String message) {
-        warn(module.getSimpleName(), message);
+    public static void warn(Class<?> sender, String message) {
+        warn(sender.getSimpleName(), message);
     }
 
-    public static void error(String module, String message) {
-        error.accept(module + ": " + message);
+    public static void error(String sender, String message) {
+        error.accept(sender + ": " + message);
     }
 
-    public static void error(Class<?> module, String message) {
-        error(module.getSimpleName(), message);
+    public static void error(Class<?> sender, String message) {
+        error(sender.getSimpleName(), message);
     }
 
 }
