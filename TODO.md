@@ -1,5 +1,7 @@
 #### Assorted Ideas (to be never completed)
 
+Save session to file!
+
 Central controller to register ingame actions and execute based on priority (Eating, Attacking, etc.)
 
 Inventory management (steal shit from open inventories thats needed, drop trash, keep some build blocks, xcarry?)
