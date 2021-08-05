@@ -13,12 +13,11 @@ import java.util.concurrent.ThreadLocalRandom;
 public class ChatSpamModule extends Module {
 
     private static final Set<String> messages = new HashSet<>();
-    private static final ExpiringFlag cooldown = new ExpiringFlag(5, ChronoUnit.MINUTES, true);
+    private static final ExpiringFlag cooldown = new ExpiringFlag(3, ChronoUnit.HOURS, true);
 
     public ChatSpamModule() {
         super();
         messages.add("Hey bitches whats up?");
-        messages.add("I live at spawn, visit me at 420 ;>");
         messages.add("Who has no head but can speak anyways?");
         messages.add("Have you tried with vanilla client?");
         messages.add("But I'm going to do it anyway, because yolo!");
