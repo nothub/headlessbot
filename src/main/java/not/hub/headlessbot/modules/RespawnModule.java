@@ -2,7 +2,6 @@ package not.hub.headlessbot.modules;
 
 import cc.neckbeard.utils.ExpiringFlag;
 import net.minecraft.client.gui.GuiGameOver;
-import net.minecraft.network.play.client.CPacketChatMessage;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import not.hub.headlessbot.Log;
@@ -38,12 +37,11 @@ public class RespawnModule extends Module {
             mc.player.respawnPlayer();
             if (messageCooldown.isValid()) return;
             else messageCooldown.reset();
-            mc.addScheduledTask(() -> mc.player.connection.sendPacket(
-                new CPacketChatMessage(
-                    messages.stream()
-                        .skip(ThreadLocalRandom.current().nextInt(messages.size()))
-                        .findAny()
-                        .orElseThrow(IllegalStateException::new))));
+            sendChat(messages
+                .stream()
+                .skip(ThreadLocalRandom.current().nextInt(messages.size()))
+                .findAny()
+                .orElseThrow(IllegalStateException::new));
         }
     }
 

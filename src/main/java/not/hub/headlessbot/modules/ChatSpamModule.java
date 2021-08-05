@@ -1,7 +1,6 @@
 package not.hub.headlessbot.modules;
 
 import cc.neckbeard.utils.ExpiringFlag;
-import net.minecraft.network.play.client.CPacketChatMessage;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -29,11 +28,11 @@ public class ChatSpamModule extends Module {
     public void onChat(ClientChatReceivedEvent ev) {
         if (cooldown.isValid()) return;
         else cooldown.reset();
-        mc.player.connection.sendPacket(new CPacketChatMessage(
-            messages.stream()
-                .skip(ThreadLocalRandom.current().nextInt(messages.size()))
-                .findAny()
-                .orElseThrow(IllegalStateException::new)));
+        sendChat(messages
+            .stream()
+            .skip(ThreadLocalRandom.current().nextInt(messages.size()))
+            .findAny()
+            .orElseThrow(IllegalStateException::new));
     }
 
 }

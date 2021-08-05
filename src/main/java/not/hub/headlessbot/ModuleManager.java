@@ -18,7 +18,7 @@ public class ModuleManager {
         add(new ChatSpamModule());
         add(new RespawnModule());
         add(new StuckDetectorModule());
-        add(new WalkingSimulatorModule());
+        add(new SpawnFagBehaviour());
     }
 
     public static Stream<? extends Module> getModules() {
