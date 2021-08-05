@@ -41,6 +41,11 @@ fi
 
 cp ../build/libs/headlessbot-*.jar mc/mods/
 
+# sanitize file names
+if detox -V >/dev/null 2>&1; then detox -v -r ./configs; fi
+
+# TODO: replace the following crap with something like docker-compose
+
 # use rootless if possible
 docker --version || sudo su
 
@@ -48,15 +53,11 @@ docker --version || sudo su
 docker rmi -f mc-headless:dev
 docker build . -t mc-headless:dev
 
-# sanitize file names
-if detox -V >/dev/null 2>&1; then detox -v -r ./configs; fi
-
 # run worker for each config file
 for f in ./configs/*.json; do
   name=mc-headless_$(basename "$f" | cut -d'.' -f1)
-  config=$(realpath "$f")
-  echo "starting worker $name with config $config"
-  docker run -tid --rm -v "$config:/opt/app/headless.json" --name "$name" mc-headless:dev
+  echo "starting worker $name"
+  docker run -tid --rm -v "$(realpath "$f"):/opt/app/headless.json" --name "$name" mc-headless:dev
   sleep 10
 done
 
