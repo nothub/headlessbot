@@ -61,7 +61,7 @@ dependencies {
     implementation configurations.jarLibs
 
     // For some reason the api at v1.2.15 exposes remapped values and breaks the build, so we use v1.2.14
-    implementation 'com.github.cabaletta:baritone:v1.2.14'
+    implementation 'com.github.cabaletta:baritone:v1.2.15'
 }
 
 processResources {
