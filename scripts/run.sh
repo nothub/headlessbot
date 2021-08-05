@@ -44,9 +44,14 @@ cp ../build/libs/headlessbot-*.jar mc/mods/
 # use rootless if possible
 docker --version || sudo su
 
+# rebuild image
 docker rmi -f mc-headless:dev
 docker build . -t mc-headless:dev
 
+# sanitize file names
+if detox -V >/dev/null 2>&1; then detox -v -r ./configs; fi
+
+# run worker for each config file
 for f in ./configs/*.json; do
   name=mc-headless_$(basename "$f" | cut -d'.' -f1)
   config=$(realpath "$f")
