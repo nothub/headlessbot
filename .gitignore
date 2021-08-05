@@ -25,7 +25,7 @@
 !/docker/scripts/**
 !/docker/.dockerignore
 !/docker/Dockerfile
-!/docker/headless.json
+!/docker/configs/example.json
 !/docker/mods.md5
 
 # scripts
