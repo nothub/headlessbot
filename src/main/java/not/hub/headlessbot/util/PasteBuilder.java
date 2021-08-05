@@ -1,4 +1,4 @@
-package not.hub.headlessbot.paste;
+package not.hub.headlessbot.util;
 
 
 import com.google.gson.Gson;

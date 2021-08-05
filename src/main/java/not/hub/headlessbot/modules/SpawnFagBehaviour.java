@@ -5,6 +5,7 @@ import baritone.api.pathing.goals.Goal;
 import baritone.api.pathing.goals.GoalXZ;
 import baritone.api.utils.BlockOptionalMeta;
 import cc.neckbeard.utils.ExpiringFlag;
+import net.minecraft.block.material.Material;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -16,7 +17,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import static not.hub.headlessbot.Bot.CONFIG;
 
-public class WalkingSimulatorModule extends Module {
+public class SpawnFagBehaviour extends Module {
 
 
     private final ExpiringFlag printPosition = new ExpiringFlag(10, ChronoUnit.SECONDS);
@@ -25,7 +26,7 @@ public class WalkingSimulatorModule extends Module {
     // TODO: replace this with an actual check
     private final ExpiringFlag baritoneGoalDelay = new ExpiringFlag(5, ChronoUnit.SECONDS);
 
-    public WalkingSimulatorModule() {
+    public SpawnFagBehaviour() {
         super();
     }
 
@@ -35,10 +36,9 @@ public class WalkingSimulatorModule extends Module {
         if (mc.world == null) return;
         if (mc.player == null) return;
 
-        // on server
-        if (mc.getCurrentServerData() == null) return;
-
+        // TODO: put this somewhere else
         // in 2b queue
+        if (mc.getCurrentServerData() == null) return;
         final BlockPos pos = mc.player.getPosition();
         if (mc.getCurrentServerData().serverIP.equals("2b2t.org")
             && pos.getX() == 0
@@ -51,6 +51,7 @@ public class WalkingSimulatorModule extends Module {
             return;
         }
 
+        // TODO: expose such data via json-file/redis/whatever instead
         // print infos
         if (!printPosition.isValid()) {
             Log.info(name, "I am at: " + pos.getX() + "x " + pos.getY() + "y " + pos.getZ() + "z (" + mc.player.dimension + ")");
@@ -63,6 +64,7 @@ public class WalkingSimulatorModule extends Module {
             if (!BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().isPathing()) {
                 switch (mc.player.dimension) {
                     case 0:  // Overworld
+                        if (mc.world.getBlockState(mc.player.getPosition()).getMaterial() == Material.PORTAL) break;
                         if (ThreadLocalRandom.current().nextBoolean()) {
                             BaritoneAPI.getProvider().getPrimaryBaritone().getGetToBlockProcess().getToBlock(new BlockOptionalMeta("portal"));
                         } else {

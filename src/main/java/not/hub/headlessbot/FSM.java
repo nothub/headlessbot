@@ -1,4 +1,4 @@
-package not.hub.headlessbot.behavior;
+package not.hub.headlessbot;
 
 import com.mojang.authlib.Agent;
 import com.mojang.authlib.exceptions.AuthenticationException;
@@ -8,11 +8,9 @@ import com.mojang.authlib.yggdrasil.YggdrasilUserAuthentication;
 import me.earth.headlessforge.util.NetworkUtil;
 import net.minecraft.util.Session;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import not.hub.headlessbot.Log;
-import not.hub.headlessbot.MC;
-import not.hub.headlessbot.ModuleManager;
 import not.hub.headlessbot.mixins.IMinecraft;
 import not.hub.headlessbot.modules.Module;
+import not.hub.headlessbot.util.MC;
 import org.spongepowered.asm.mixin.MixinEnvironment;
 
 import java.net.Proxy;

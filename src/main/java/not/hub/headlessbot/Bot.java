@@ -8,7 +8,6 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import not.hub.headlessbot.behavior.FSM;
 
 
 @Mod(modid = Bot.MODID, name = Bot.MODID, version = Bot.VERSION, clientSideOnly = true, acceptableRemoteVersions = "*")
