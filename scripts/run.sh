@@ -46,4 +46,13 @@ docker --version || sudo su
 
 docker rmi -f mc-headless:dev
 docker build . -t mc-headless:dev
-docker run -it --rm -v "${PWD}"/headless.json:/opt/app/headless.json mc-headless:dev
+
+for f in ./configs/*.json; do
+  name=mc-headless_$(basename "$f" | cut -d'.' -f1)
+  config=$(realpath "$f")
+  echo "starting worker $name with config $config"
+  docker run -tid --rm -v "$config:/opt/app/headless.json" --name "$name" mc-headless:dev
+  sleep 10
+done
+
+docker ps
