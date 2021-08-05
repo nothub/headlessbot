@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
+# cAdvisor does not support rootless!
+
 set -eo pipefail
 
-docker --version || sudo su
-
-docker rm -f cadvisor
-docker run \
+sudo docker rm -f cadvisor
+sudo docker run \
   --name=cadvisor \
   --volume=/:/rootfs:ro \
   --volume=/var/run:/var/run:ro \
