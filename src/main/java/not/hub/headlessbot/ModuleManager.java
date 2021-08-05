@@ -18,6 +18,7 @@ public class ModuleManager {
         add(new ChatSpamModule());
         add(new RespawnModule());
         add(new StuckDetectorModule());
+        // TODO: behaviour as nested fsm
         add(new SpawnFagBehaviour());
     }
 
