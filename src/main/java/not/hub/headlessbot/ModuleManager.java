@@ -1,6 +1,7 @@
 package not.hub.headlessbot;
 
 import not.hub.headlessbot.modules.*;
+import not.hub.headlessbot.modules.behaviour.SpawnFagBehaviour;
 
 import java.util.Map;
 import java.util.Optional;

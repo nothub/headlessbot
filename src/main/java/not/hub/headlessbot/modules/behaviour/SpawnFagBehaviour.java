@@ -1,4 +1,4 @@
-package not.hub.headlessbot.modules;
+package not.hub.headlessbot.modules.behaviour;
 
 import baritone.api.BaritoneAPI;
 import baritone.api.pathing.goals.Goal;
@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import not.hub.headlessbot.Log;
+import not.hub.headlessbot.modules.Module;
 
 import java.time.temporal.ChronoUnit;
 import java.util.concurrent.ThreadLocalRandom;
