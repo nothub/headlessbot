@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 
 import static not.hub.headlessbot.Bot.CONFIG;
 
+// TODO: implement not.hub.headlessbot.fsm.FSM
 public class FSM implements MC {
 
     private static final Map<State, Consumer<Boolean>> transitions = new HashMap<>();
