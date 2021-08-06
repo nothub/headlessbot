@@ -50,14 +50,14 @@ if detox -V >/dev/null 2>&1; then detox -v -r ./configs; fi
 docker --version || sudo su
 
 # rebuild image
-docker rmi -f mc-headless:dev
-docker build . -t mc-headless:dev
+docker rmi -f headlessbot:dev
+docker build . -t headlessbot:dev
 
 # run worker for each config file
 for f in ./configs/*.json; do
-  name=mc-headless_$(basename "$f" | cut -d'.' -f1)
+  name=headlessbot_$(basename "$f" | cut -d'.' -f1)
   echo "starting worker $name"
-  docker run -tid --rm -v "$(realpath "$f"):/opt/app/headless.json" --name "$name" mc-headless:dev
+  docker run -tid --rm -v "$(realpath "$f"):/opt/app/headless.json" --name "$name" headlessbot:dev
   sleep 10
 done
 
