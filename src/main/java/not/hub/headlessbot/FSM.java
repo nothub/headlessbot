@@ -82,9 +82,11 @@ public class FSM implements MC {
      * FSM States
      */
     public enum State {
+
         START(() -> {
             Log.info(FSM.class, "Hello World!");
         }),
+
         INIT_BOT(() -> {
             System.out.println("\n" +
                 "----------------------------------------------------------------" + "\n" +
@@ -114,11 +116,13 @@ public class FSM implements MC {
                 ModuleManager.getModules().map(m -> "  - " + m.name).collect(Collectors.joining("\n")) + "\n" +
                 "----------------------------------------------------------------");
         }),
+
         LOGIN_ACCOUNT(() -> {
             if (mc.getSession().getUsername().equals(CONFIG.username)) {
                 Log.warn(FSM.class, "Already logged in!");
                 return;
             }
+            // TODO: central place shared between workers for tracking accout login delays?
             YggdrasilUserAuthentication auth = (YggdrasilUserAuthentication) new YggdrasilAuthenticationService(Proxy.NO_PROXY, "").createUserAuthentication(Agent.MINECRAFT);
             auth.setUsername(CONFIG.username);
             auth.setPassword(CONFIG.password);
@@ -139,8 +143,12 @@ public class FSM implements MC {
                 transition(false);
             }
         }),
+
         CONNECT_SERVER(() -> {
             CompletableFuture.supplyAsync(() -> {
+                Log.info(FSM.class, "Awaiting connection cooldown for " + CONFIG.hostname);
+                Cooldowns.await(Cooldowns.CONNECT, true);
+                Log.info(FSM.class, "Starting connection with " + CONFIG.hostname);
                 try {
                     mc.addScheduledTask(() -> NetworkUtil.INSTANCE.connect(CONFIG.hostname)).get(10, TimeUnit.SECONDS);
                 } catch (InterruptedException | ExecutionException ex) {
@@ -158,14 +166,29 @@ public class FSM implements MC {
                 return false;
             }).thenAccept(FSM::transition);
         }),
+
         ACTIVE(() -> {
             ModuleManager.getModules().forEach(Module::activate);
+            CompletableFuture.supplyAsync(() -> {
+                while (mc.getCurrentServerData() != null) {
+                    try {
+                        Thread.sleep(50);
+                    } catch (InterruptedException ex) {
+                        Log.error(FSM.class, ex.getMessage());
+                    }
+                    if (Bot.isShutdown()) return true;
+                }
+                Log.info(FSM.class, "Server connection lost...");
+                return false;
+            }).thenAccept(FSM::transition);
         }),
+
         PANIC(() -> {
             Log.error(FSM.class, "PANIC! cya...");
             Log.info(FSM.class, "Exiting with code 1");
             FMLCommonHandler.instance().exitJava(1, false);
         }),
+
         EXIT(() -> {
             Log.info(FSM.class, "Exiting with code 0");
             FMLCommonHandler.instance().exitJava(0, false);
@@ -182,6 +205,7 @@ public class FSM implements MC {
             Log.info(FSM.class, "Executing " + this.name());
             r.run();
         }
+
     }
 
 }

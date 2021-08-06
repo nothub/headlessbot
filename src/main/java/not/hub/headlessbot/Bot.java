@@ -19,6 +19,16 @@ public class Bot {
     public static final Config CONFIG = Config.load();
     public static final Webhook WEBHOOK = new Webhook(CONFIG.webhook);
 
+    private static boolean shutdown = false;
+
+    public static boolean isShutdown() {
+        return shutdown;
+    }
+
+    public static void setShutdown(boolean shutdown) {
+        Bot.shutdown = shutdown;
+    }
+
     @Mod.EventHandler
     public void fmlInit(FMLPreInitializationEvent event) {
         Log.info("FML init state", "PRE_INIT");
