@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
+// TODO: expose a way to externally invoke transition execution
 public abstract class FSM {
 
     private final Map<State, Supplier<State>> transitions = new HashMap<>();
