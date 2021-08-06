@@ -12,4 +12,4 @@ Headless Minecraft bot using [cabaletta/baritone](https://github.com/cabaletta/b
 
 Configuration goes to: `docker/headless.json`
 
-Build and run with: [`./scripts/run.sh`](https://asciinema.org/a/xohgMqyQQQnd1hgT24XP0LB0S)
+Build and run with: [`./scripts/run.sh`](./scripts/run.sh)

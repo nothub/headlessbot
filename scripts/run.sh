@@ -3,6 +3,8 @@ set -eo pipefail
 
 MC_PATH=~/.minecraft
 FORGE_VER=1.12.2-forge-14.23.5.2854
+URL_HEADLESSFORGE=https://github.com/3arthqu4ke/HeadlessForge/releases/download/1.1/headlessforge-1.1.jar
+URL_BARITONE=https://github.com/cabaletta/baritone/releases/download/v1.2.15/baritone-api-forge-1.2.15.jar
 
 if [ ! -d $MC_PATH ]; then
   echo "Minecraft launcher is missing at path: $MC_PATH"
@@ -34,8 +36,8 @@ if [ ! -d mc ]; then
   } >mc/options.txt
   # download mods
   mkdir -p mc/mods
-  curl -L https://github.com/3arthqu4ke/HeadlessForge/releases/download/1.1/headlessforge-1.1.jar -o mc/mods/headlessforge-1.1.jar
-  curl -L https://github.com/cabaletta/baritone/releases/download/v1.2.15/baritone-api-forge-1.2.15.jar -o mc/mods/baritone-api-forge-1.2.15.jar
+  curl -L $URL_HEADLESSFORGE -o mc/mods/headlessforge-1.1.jar
+  curl -L $URL_BARITONE -o mc/mods/baritone-api-forge-1.2.15.jar
   md5sum -c mods.md5
 fi
 
