@@ -10,6 +10,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import not.hub.headlessbot.Cooldowns;
 import not.hub.headlessbot.Log;
 import not.hub.headlessbot.modules.Module;
 
@@ -20,12 +21,8 @@ import static not.hub.headlessbot.Bot.CONFIG;
 
 public class SpawnFagBehaviour extends Module {
 
-
     private final ExpiringFlag printPosition = new ExpiringFlag(10, ChronoUnit.SECONDS);
     private final ExpiringFlag printQueue = new ExpiringFlag(1, ChronoUnit.MINUTES);
-
-    // TODO: replace this with an actual check
-    private final ExpiringFlag baritoneGoalDelay = new ExpiringFlag(5, ChronoUnit.SECONDS);
 
     public SpawnFagBehaviour() {
         super();
@@ -60,31 +57,30 @@ public class SpawnFagBehaviour extends Module {
         }
 
         // baritone
+        if (Cooldowns.BARITONE.isValid()) return;
         try {
-            if (baritoneGoalDelay.isValid()) return;
-            if (!BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().isPathing()) {
-                switch (mc.player.dimension) {
-                    case 0:  // Overworld
-                        if (mc.world.getBlockState(mc.player.getPosition()).getMaterial() == Material.PORTAL) break;
-                        if (ThreadLocalRandom.current().nextBoolean()) {
-                            BaritoneAPI.getProvider().getPrimaryBaritone().getGetToBlockProcess().getToBlock(new BlockOptionalMeta("portal"));
-                        } else {
-                            BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(randomGoal(0, 0, 256));
-                        }
-                        Log.info(name, "Searching for a nether portal...");
-                        break;
-                    case -1:  // Nether
-                        final Goal netherGoal = randomGoal(0, 0, 128);
-                        BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(netherGoal);
-                        Log.info(name, "Going to nether coords: " + netherGoal);
-                        break;
-                    case 1:  // End
-                        BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(randomGoal(mc.player.getPosition().getX(), mc.player.getPosition().getZ(), 128));
-                        Log.info(name, "Chilling in the end...");
-                        break;
-                }
-                baritoneGoalDelay.reset();
+            if (BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().isPathing()) return;
+            switch (mc.player.dimension) {
+                case 0:  // Overworld
+                    if (mc.world.getBlockState(mc.player.getPosition()).getMaterial() == Material.PORTAL) break;
+                    if (ThreadLocalRandom.current().nextBoolean()) {
+                        BaritoneAPI.getProvider().getPrimaryBaritone().getGetToBlockProcess().getToBlock(new BlockOptionalMeta("portal"));
+                    } else {
+                        BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(randomGoal(0, 0, 256));
+                    }
+                    Log.info(name, "Searching for a nether portal...");
+                    break;
+                case -1:  // Nether
+                    final Goal netherGoal = randomGoal(0, 0, 128);
+                    BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(netherGoal);
+                    Log.info(name, "Going to nether coords: " + netherGoal);
+                    break;
+                case 1:  // End
+                    BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(randomGoal(mc.player.getPosition().getX(), mc.player.getPosition().getZ(), 128));
+                    Log.info(name, "Chilling in the end...");
+                    break;
             }
+            Cooldowns.BARITONE.reset();
         } catch (NoClassDefFoundError | NullPointerException ex) {
             Log.error(name, "Baritone API not found, shutting down... " + ex.getMessage());
             FMLCommonHandler.instance().exitJava(1, false);

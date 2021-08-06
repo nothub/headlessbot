@@ -62,5 +62,3 @@ for f in ./configs/*.json; do
   docker run -tid --rm -v "$(realpath "$f"):/opt/app/headless.json" --name "$name" headlessbot:dev
   sleep 10
 done
-
-docker ps
