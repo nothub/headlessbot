@@ -1,6 +1,8 @@
 {
   "username": "USERNAME",
   "password": "PASSWORD",
-  "hostname": "HOSTNAME",
-  "webhook": "https://discord.com/api/webhooks/ID/TOKEN"
+  "hostname": "127.0.0.1",
+  "webhook": "https://discord.com/api/webhooks/ID/TOKEN",
+  "homeX": 420,
+  "homeZ": 420
 }
