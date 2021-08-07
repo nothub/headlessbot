@@ -5,7 +5,7 @@ import baritone.api.Settings;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import not.hub.headlessbot.Log;
-import not.hub.headlessbot.util.ItemGroup;
+import not.hub.headlessbot.util.BlockGroups;
 
 import java.util.stream.Collectors;
 
@@ -70,6 +70,13 @@ public class BaritoneSettingsModule extends Module {
             settings.buildIgnoreExisting.value = true;
             settings.okIfWater.value = true;
 
+            settings.avoidance.value = true;
+            settings.mobSpawnerAvoidanceRadius.value = 16;
+            settings.mobAvoidanceRadius.value = 16;
+
+            settings.followOffsetDistance.value = 16d;
+            settings.followRadius.value = 24;
+
             settings.echoCommands.value = true;
             settings.prefixControl.value = true;
             settings.chatControl.value = false;
@@ -87,7 +94,7 @@ public class BaritoneSettingsModule extends Module {
             settings.renderSelectionCorners.value = false;
             settings.desktopNotifications.value = false;
 
-            settings.acceptableThrowawayItems.value.addAll(ItemGroup.MINEABLE_HAND.items);
+            settings.acceptableThrowawayItems.value.addAll(BlockGroups.PATHING_BLOCKS.items);
 
             Log.info(name, "Baritone initialized with settings:\n"
                 + settings
@@ -104,11 +111,6 @@ public class BaritoneSettingsModule extends Module {
          *     public final Settings$Setting<Boolean> allowSprint;
          *     public final Settings$Setting<Boolean> sprintInWater;
          *
-         *       TODO: check for armor and weapons
-         *     public final Settings$Setting<Boolean> avoidance;
-         *     public final Settings$Setting<Integer> mobSpawnerAvoidanceRadius;
-         *     public final Settings$Setting<Integer> mobAvoidanceRadius;
-         *
          *       TODO: sync from module states
          *     public final Settings$Setting<Integer> maxFallHeightNoWater;
          *     public final Settings$Setting<Boolean> antiCheatCompatibility;
@@ -117,11 +119,6 @@ public class BaritoneSettingsModule extends Module {
          *     public final Settings$Setting<Boolean> assumeWalkOnLava;
          *     public final Settings$Setting<Boolean> assumeStep;
          *     public final Settings$Setting<Boolean> assumeSafeWalk;
-         *
-         *       TODO: follow mode
-         *     public final Settings$Setting<Double> followOffsetDistance;
-         *     public final Settings$Setting<Float> followOffsetDirection;
-         *     public final Settings$Setting<Integer> followRadius;
          *
          *       TODO: builder mode
          *     public final Settings$Setting<Boolean> buildInLayers;

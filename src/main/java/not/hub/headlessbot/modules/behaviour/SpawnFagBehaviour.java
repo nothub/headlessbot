@@ -9,12 +9,11 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import not.hub.headlessbot.Bot;
 import not.hub.headlessbot.Cooldowns;
 import not.hub.headlessbot.Log;
 import not.hub.headlessbot.StringFormat;
 import not.hub.headlessbot.modules.Module;
-import not.hub.headlessbot.util.ItemGroup;
+import not.hub.headlessbot.util.BlockGroups;
 
 import java.time.temporal.ChronoUnit;
 import java.util.concurrent.ThreadLocalRandom;
@@ -48,29 +47,33 @@ public class SpawnFagBehaviour extends Module {
 
         // is busy pathing
         if (BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().isPathing()) return;
-
         Log.info(getClass(), "Generating new baritone goal...");
 
         // blockgame is hard
         if (ThreadLocalRandom.current().nextInt(10) == 0) {
-            final GoalXZ goal = randomGoal(Bot.CONFIG.homeX, Bot.CONFIG.homeZ, 666);
+            final GoalXZ goal = randomGoal(0, 0, 1024);
             Log.info(getClass(), "Maybe we lucky? Gonna go to: " + goal);
             BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(goal);
             return;
         }
 
+        // get some pathing blocks
         if (!hasBlocks()) {
             Log.info(getClass(), "Got no blocks, gonna get some...");
-            //if (hasPickaxe()) {
-            //} else {
-            //}
-            BaritoneAPI.getProvider().getPrimaryBaritone().getMineProcess().mine(16,
-                ItemGroup.MINEABLE_HAND.blocks.toArray(new Block[0]));
+            if (hasPickaxe()) BaritoneAPI
+                .getProvider()
+                .getPrimaryBaritone()
+                .getMineProcess()
+                .mine(64, BlockGroups.PATHING_BLOCKS.blocks.toArray(new Block[0]));
+            else BaritoneAPI
+                .getProvider()
+                .getPrimaryBaritone()
+                .getMineProcess()
+                .mine(8, BlockGroups.MINEABLE_HAND.blocks.toArray(new Block[0]));
             return;
         }
 
         // travel
-        // TODO: refactor
         switch (mc.player.dimension) {
             case 0:  // Overworld
                 if (mc.world.getBlockState(mc.player.getPosition()).getMaterial() == Material.PORTAL) break;
