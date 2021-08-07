@@ -184,23 +184,21 @@ public class FSM implements MC {
         QUEUE(() -> {
             Log.info(FSM.class, "Checking for queue...");
             CompletableFuture.supplyAsync(() -> {
-                ExpiringFlag checkCooldown = new ExpiringFlag(4, ChronoUnit.SECONDS, true);
                 ExpiringFlag notificationCooldown = new ExpiringFlag(1, ChronoUnit.MINUTES, false);
                 while (true) {
-                    Cooldowns.await(checkCooldown, true);
+                    Cooldowns.await(1, ChronoUnit.SECONDS);
                     if (mc.getCurrentServerData() == null) {
                         Log.warn(FSM.class, "Server connection lost...");
                         return false;
                     }
                     if (mc.player == null) continue;
-                    if (mc.player.capabilities.isFlying && mc.player.posX == 0 && mc.player.posZ == 0) {
+                    if (mc.player.capabilities.isFlying) {
                         if (notificationCooldown.isExpired()) {
                             notificationCooldown.reset();
                             Log.info(FSM.class, CONFIG.hostname + " is full...");
                         }
                         continue;
                     }
-
                     Bot.WEBHOOK.info("Ready on " + mc.getCurrentServerData().serverIP);
                     return true;
                 }

@@ -15,8 +15,8 @@ public class StringFormat {
 
     public static String of(int dim) {
         if (dim == 0) return "OVERWORLD";
-        else if (dim == 1) return "NETHER";
-        else if (dim == -1) return "END";
+        else if (dim == 1) return "END";
+        else if (dim == -1) return "NETHER";
         else return "CUSTOM (" + dim + ")";
     }
 

@@ -5,6 +5,7 @@ import baritone.api.Settings;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import not.hub.headlessbot.Log;
+import not.hub.headlessbot.util.ItemGroup;
 
 import java.util.stream.Collectors;
 
@@ -41,6 +42,8 @@ public class BaritoneSettingsModule extends Module {
             settings.allowParkourAscend.value = true;
             settings.allowDiagonalDescend.value = true;
             settings.allowDiagonalAscend.value = true;
+
+            settings.exploreForBlocks.value = true;
 
             // assume no jesus as default
             settings.assumeWalkOnWater.value = false;
@@ -83,6 +86,8 @@ public class BaritoneSettingsModule extends Module {
             settings.renderSelection.value = false;
             settings.renderSelectionCorners.value = false;
             settings.desktopNotifications.value = false;
+
+            settings.acceptableThrowawayItems.value.addAll(ItemGroup.MINEABLE_HAND.items);
 
             Log.info(name, "Baritone initialized with settings:\n"
                 + settings

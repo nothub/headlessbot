@@ -18,12 +18,16 @@ public class Config {
     public final String password;
     public final String hostname;
     public final String webhook;
+    public final int homeX;
+    public final int homeZ;
 
     public Config() {
         this.username = "USERNAME";
         this.password = "PASSWORD";
         this.hostname = "EXAMPLE.ORG";
         this.webhook = "https://discord.com/api/webhooks/ID/TOKEN";
+        this.homeX = 420;
+        this.homeZ = 420;
     }
 
     public static Config load() {

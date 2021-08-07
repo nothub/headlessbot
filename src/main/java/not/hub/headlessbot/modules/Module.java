@@ -1,5 +1,8 @@
 package not.hub.headlessbot.modules;
 
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemPickaxe;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.CPacketChatMessage;
 import net.minecraftforge.common.MinecraftForge;
 import not.hub.headlessbot.util.MC;
@@ -45,6 +48,28 @@ public abstract class Module implements MC {
 
     public boolean isActive() {
         return active;
+    }
+
+    public boolean hasBlocks() {
+        return mc
+            .player
+            .inventory
+            .mainInventory
+            .stream()
+            .filter(itemStack -> !itemStack.isEmpty())
+            .map(ItemStack::getItem)
+            .anyMatch(item -> item instanceof ItemBlock);
+    }
+
+    public boolean hasPickaxe() {
+        return mc
+            .player
+            .inventory
+            .mainInventory
+            .stream()
+            .filter(itemStack -> !itemStack.isEmpty())
+            .map(ItemStack::getItem)
+            .anyMatch(item -> item instanceof ItemPickaxe);
     }
 
 }

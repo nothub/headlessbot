@@ -7,7 +7,7 @@ import java.time.temporal.ChronoUnit;
 public class Cooldowns {
 
     public static final ExpiringFlag CONNECT = new ExpiringFlag(20, ChronoUnit.SECONDS, false);
-    public static final ExpiringFlag BARITONE = new ExpiringFlag(3, ChronoUnit.SECONDS, false);
+    public static final ExpiringFlag BARITONE = new ExpiringFlag(10, ChronoUnit.SECONDS, false);
 
     public static void await(ExpiringFlag flag, boolean reset) {
         while (flag.isValid()) {

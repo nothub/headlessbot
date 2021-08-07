@@ -1,18 +1,20 @@
 package not.hub.headlessbot.modules.behaviour;
 
 import baritone.api.BaritoneAPI;
-import baritone.api.pathing.goals.Goal;
+import baritone.api.pathing.goals.GoalBlock;
 import baritone.api.pathing.goals.GoalXZ;
 import baritone.api.utils.BlockOptionalMeta;
 import cc.neckbeard.utils.ExpiringFlag;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import not.hub.headlessbot.Bot;
 import not.hub.headlessbot.Cooldowns;
 import not.hub.headlessbot.Log;
 import not.hub.headlessbot.StringFormat;
 import not.hub.headlessbot.modules.Module;
+import not.hub.headlessbot.util.ItemGroup;
 
 import java.time.temporal.ChronoUnit;
 import java.util.concurrent.ThreadLocalRandom;
@@ -38,45 +40,68 @@ public class SpawnFagBehaviour extends Module {
             Log.info(name, "Current location: " + StringFormat.of(mc.player));
         }
 
-        // baritone
+        // BARITONE
+
+        // is cooldown
         if (Cooldowns.BARITONE.isValid()) return;
-        try {
-            if (BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().isPathing()) return;
-            Log.info(getClass(), "Generating new baritone goal...");
-            switch (mc.player.dimension) {
-                case 0:  // Overworld
-                    if (mc.world.getBlockState(mc.player.getPosition()).getMaterial() == Material.PORTAL) break;
-                    if (ThreadLocalRandom.current().nextBoolean()) {
-                        BaritoneAPI.getProvider().getPrimaryBaritone().getGetToBlockProcess().getToBlock(new BlockOptionalMeta("portal"));
-                    } else {
-                        BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(randomGoal(0, 0, 256));
-                    }
-                    Log.info(name, "Searching for a nether portal...");
-                    break;
-                case -1:  // Nether
-                    final Goal netherGoal = randomGoal(0, 0, 128);
-                    BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(netherGoal);
-                    Log.info(name, "Going to nether coords: " + netherGoal);
-                    break;
-                case 1:  // End
-                    BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(randomGoal(mc.player.getPosition().getX(), mc.player.getPosition().getZ(), 128));
-                    Log.info(name, "Chilling in the end...");
-                    break;
-            }
-            Cooldowns.BARITONE.reset();
-        } catch (NoClassDefFoundError | NullPointerException ex) {
-            Log.error(name, "Baritone API not found, shutting down... " + ex.getMessage());
-            FMLCommonHandler.instance().exitJava(1, false);
+        Cooldowns.BARITONE.reset();
+
+        // is busy pathing
+        if (BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().isPathing()) return;
+
+        Log.info(getClass(), "Generating new baritone goal...");
+
+        // blockgame is hard
+        if (ThreadLocalRandom.current().nextInt(10) == 0) {
+            final GoalXZ goal = randomGoal(Bot.CONFIG.homeX, Bot.CONFIG.homeZ, 666);
+            Log.info(getClass(), "Maybe we lucky? Gonna go to: " + goal);
+            BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(goal);
+            return;
         }
+
+        if (!hasBlocks()) {
+            Log.info(getClass(), "Got no blocks, gonna get some...");
+            //if (hasPickaxe()) {
+            //} else {
+            //}
+            BaritoneAPI.getProvider().getPrimaryBaritone().getMineProcess().mine(16,
+                ItemGroup.MINEABLE_HAND.blocks.toArray(new Block[0]));
+            return;
+        }
+
+        // travel
+        // TODO: refactor
+        switch (mc.player.dimension) {
+            case 0:  // Overworld
+                if (mc.world.getBlockState(mc.player.getPosition()).getMaterial() == Material.PORTAL) break;
+                BaritoneAPI.getProvider().getPrimaryBaritone().getGetToBlockProcess().getToBlock(new BlockOptionalMeta("portal"));
+                Log.info(name, "Searching for nether portal...");
+                break;
+            case -1:  // Nether
+                final GoalBlock netherGoal = randomGoal(0, 120, 0, 128);
+                BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(netherGoal);
+                Log.info(name, "Going to nether coords: " + netherGoal);
+                break;
+            case 1:  // End
+                BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(randomGoal(mc.player.getPosition().getX(), mc.player.getPosition().getZ(), 64));
+                Log.info(name, "Chilling in the end...");
+                break;
+        }
+
     }
 
-    private Goal randomGoal(final int x, final int z, int radius) {
+    private GoalXZ randomGoal(final int x, final int z, int radius) {
         final ThreadLocalRandom random = ThreadLocalRandom.current();
         if (radius < 0) radius = Math.abs(radius);
         if (radius < 1) radius = 1;
         final int xRandom = random.nextInt(-1 * radius, radius + 1);
         final int zRandom = random.nextInt(-1 * radius, radius + 1);
         return new GoalXZ(x + xRandom, z + zRandom);
+    }
+
+    private GoalBlock randomGoal(final int x, final int y, final int z, int radius) {
+        GoalXZ goalXZ = randomGoal(x, z, radius);
+        return new GoalBlock(goalXZ.getX(), y, goalXZ.getZ());
     }
 
 }
