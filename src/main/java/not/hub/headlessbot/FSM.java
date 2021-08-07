@@ -173,6 +173,7 @@ public class FSM implements MC {
                 }
                 if (mc.getCurrentServerData() != null) {
                     Log.info(FSM.class, "Connected to server " + mc.getCurrentServerData().serverIP);
+                    Bot.WEBHOOK.info("Connected to server " + mc.getCurrentServerData().serverIP);
                     return true;
                 }
                 Log.error(FSM.class, "Server connection failed!");
@@ -183,9 +184,10 @@ public class FSM implements MC {
         QUEUE(() -> {
             Log.info(FSM.class, "Checking for queue...");
             CompletableFuture.supplyAsync(() -> {
+                ExpiringFlag checkCooldown = new ExpiringFlag(4, ChronoUnit.SECONDS, true);
                 ExpiringFlag notificationCooldown = new ExpiringFlag(1, ChronoUnit.MINUTES, false);
                 while (true) {
-                    Cooldowns.await(1, ChronoUnit.SECONDS);
+                    Cooldowns.await(checkCooldown, true);
                     if (mc.getCurrentServerData() == null) {
                         Log.warn(FSM.class, "Server connection lost...");
                         return false;
@@ -198,6 +200,8 @@ public class FSM implements MC {
                         }
                         continue;
                     }
+
+                    Bot.WEBHOOK.info("Ready on " + mc.getCurrentServerData().serverIP);
                     return true;
                 }
             }).thenAccept(FSM::transition);
