@@ -1,18 +1,20 @@
 package not.hub.headlessbot.modules;
 
+import baritone.api.BaritoneAPI;
+import baritone.api.utils.BlockOptionalMeta;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import not.hub.headlessbot.Log;
+import not.hub.headlessbot.StringFormat;
 import not.hub.headlessbot.util.TriConsumer;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class ChatCommandsModule extends Module {
 
@@ -27,7 +29,30 @@ public class ChatCommandsModule extends Module {
 
     public ChatCommandsModule() {
         super();
+        commands.put("help", (sender, label, args) -> sendChat("Commands: " + String.join(", ", commands.keySet())));
+        commands.put("commands", (sender, label, args) -> sendChat("Commands: " + String.join(", ", commands.keySet())));
+        commands.put("pos", (sender, label, args) -> sendChat("I am at " + StringFormat.of(mc.player)));
         commands.put("test", (sender, label, args) -> sendChat(sender + " I can hear you but i have no brain sorry... You said: " + label + String.join(" ", args)));
+        commands.put("nearby", (sender, label, args) -> {
+            final String players = mc.world.playerEntities.stream().map(EntityPlayer::getName).collect(Collectors.joining(", "));
+            sendChat("dude idk man there is so much shit here, cobble and lava and " + (players.isEmpty() ? "withers and shit..." : players));
+        });
+        commands.put("follow", (sender, label, args) -> {
+            Optional<EntityPlayer> target = mc.world.playerEntities.stream()
+                .filter(entityPlayer -> entityPlayer.getName().equalsIgnoreCase(sender))
+                .findAny();
+            if (!target.isPresent()) {
+                sendChat("idk man");
+                return;
+            }
+            sendChat("okay");
+            BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().cancelEverything();
+            BaritoneAPI.getProvider().getPrimaryBaritone().getGetToBlockProcess().getToBlock(new BlockOptionalMeta("follow player " + sender));
+        });
+        commands.put("resetgoal", (sender, label, args) -> {
+            sendChat("okay, i dont care");
+            BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().cancelEverything();
+        });
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
