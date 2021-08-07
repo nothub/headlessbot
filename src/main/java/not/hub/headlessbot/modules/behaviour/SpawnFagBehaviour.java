@@ -47,6 +47,11 @@ public class SpawnFagBehaviour extends Module {
 
         // is busy pathing
         if (BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().isPathing()) return;
+        // is busy following
+        if (BaritoneAPI.getProvider().getPrimaryBaritone().getFollowProcess().isActive()) return;
+        // is busy mining
+        if (BaritoneAPI.getProvider().getPrimaryBaritone().getMineProcess().isActive()) return;
+
         Log.info(getClass(), "Generating new baritone goal...");
 
         // blockgame is hard

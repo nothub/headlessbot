@@ -1,7 +1,6 @@
 package not.hub.headlessbot.modules;
 
 import baritone.api.BaritoneAPI;
-import baritone.api.utils.BlockOptionalMeta;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -20,7 +19,7 @@ public class ChatCommandsModule extends Module {
 
     private static final String PREFIX = "~";
 
-    private static final Pattern com = Pattern.compile("^(<[a-zA-Z0-9_]{3,16}>)\\s(.+)$");
+    private static final Pattern com = Pattern.compile("^<([a-zA-Z0-9_]{3,16})>\\s(.+)$");
     private static final Pattern tpa = Pattern.compile("^([a-zA-Z0-9_]{3,16}) wants to teleport to you\\.$");
 
     private static final Map<String, TriConsumer<String, String, List<String>>> commands = new ConcurrentHashMap<>();
@@ -47,7 +46,7 @@ public class ChatCommandsModule extends Module {
             }
             sendChat("okay");
             BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().cancelEverything();
-            BaritoneAPI.getProvider().getPrimaryBaritone().getGetToBlockProcess().getToBlock(new BlockOptionalMeta("follow player " + sender));
+            BaritoneAPI.getProvider().getPrimaryBaritone().getCommandManager().execute("follow player " + sender);
         });
         commands.put("resetgoal", (sender, label, args) -> {
             sendChat("okay, i dont care");
