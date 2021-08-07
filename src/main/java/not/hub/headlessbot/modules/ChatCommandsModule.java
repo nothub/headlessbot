@@ -52,6 +52,11 @@ public class ChatCommandsModule extends Module {
             sendChat("okay, i dont care");
             BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().cancelEverything();
         });
+        commands.put("baritone", (sender, label, args) -> {
+            sendChat("okay, let me try to do that");
+            BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().cancelEverything();
+            BaritoneAPI.getProvider().getPrimaryBaritone().getCommandManager().execute(String.join(" ", args));
+        });
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
