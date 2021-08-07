@@ -74,8 +74,8 @@ public class BaritoneSettingsModule extends Module {
             settings.mobSpawnerAvoidanceRadius.value = 16;
             settings.mobAvoidanceRadius.value = 16;
 
-            settings.followOffsetDistance.value = 16d;
-            settings.followRadius.value = 24;
+            settings.followOffsetDistance.value = 8d;
+            settings.followRadius.value = 16;
 
             settings.echoCommands.value = true;
             settings.prefixControl.value = true;

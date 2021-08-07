@@ -5,7 +5,6 @@ import baritone.api.pathing.goals.GoalBlock;
 import baritone.api.pathing.goals.GoalXZ;
 import baritone.api.utils.BlockOptionalMeta;
 import cc.neckbeard.utils.ExpiringFlag;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -13,7 +12,6 @@ import not.hub.headlessbot.Cooldowns;
 import not.hub.headlessbot.Log;
 import not.hub.headlessbot.StringFormat;
 import not.hub.headlessbot.modules.Module;
-import not.hub.headlessbot.util.BlockGroups;
 
 import java.time.temporal.ChronoUnit;
 import java.util.concurrent.ThreadLocalRandom;
@@ -63,20 +61,21 @@ public class SpawnFagBehaviour extends Module {
         }
 
         // get some pathing blocks
-        if (!hasBlocks()) {
-            Log.info(getClass(), "Got no blocks, gonna get some...");
-            if (hasPickaxe()) BaritoneAPI
-                .getProvider()
-                .getPrimaryBaritone()
-                .getMineProcess()
-                .mine(64, BlockGroups.PATHING_BLOCKS.blocks.toArray(new Block[0]));
-            else BaritoneAPI
-                .getProvider()
-                .getPrimaryBaritone()
-                .getMineProcess()
-                .mine(8, BlockGroups.MINEABLE_HAND.blocks.toArray(new Block[0]));
-            return;
-        }
+        // too much cpu for a lot of bots on my vps
+//        if (!hasBlocks()) {
+//            Log.info(getClass(), "Got no blocks, gonna get some...");
+//            if (hasPickaxe()) BaritoneAPI
+//                .getProvider()
+//                .getPrimaryBaritone()
+//                .getMineProcess()
+//                .mine(64, BlockGroups.PATHING_BLOCKS.blocks.toArray(new Block[0]));
+//            else BaritoneAPI
+//                .getProvider()
+//                .getPrimaryBaritone()
+//                .getMineProcess()
+//                .mine(8, BlockGroups.MINEABLE_HAND.blocks.toArray(new Block[0]));
+//            return;
+//        }
 
         // travel
         switch (mc.player.dimension) {

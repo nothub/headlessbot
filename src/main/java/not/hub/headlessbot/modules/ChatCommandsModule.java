@@ -33,7 +33,7 @@ public class ChatCommandsModule extends Module {
         commands.put("pos", (sender, label, args) -> sendChat("I am at " + StringFormat.of(mc.player)));
         commands.put("test", (sender, label, args) -> sendChat(sender + " I can hear you but i have no brain sorry... You said: " + label + String.join(" ", args)));
         commands.put("nearby", (sender, label, args) -> {
-            final String players = mc.world.playerEntities.stream().map(EntityPlayer::getName).collect(Collectors.joining(", "));
+            final String players = mc.world.playerEntities.stream().filter(entityPlayer -> !entityPlayer.getUniqueID().equals(mc.player.getUniqueID())).map(EntityPlayer::getName).collect(Collectors.joining(", "));
             sendChat("dude idk man there is so much shit here, cobble and lava and " + (players.isEmpty() ? "withers and shit..." : players));
         });
         commands.put("follow", (sender, label, args) -> {
@@ -51,6 +51,10 @@ public class ChatCommandsModule extends Module {
         commands.put("resetgoal", (sender, label, args) -> {
             sendChat("okay, i dont care");
             BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().cancelEverything();
+        });
+        commands.put("kill", (sender, label, args) -> {
+            BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().cancelEverything();
+            sendChat("/kill");
         });
         commands.put("baritone", (sender, label, args) -> {
             sendChat("okay, let me try to do that");
