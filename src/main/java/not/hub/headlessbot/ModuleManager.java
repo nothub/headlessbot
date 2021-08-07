@@ -13,6 +13,7 @@ public class ModuleManager {
     private static final Map<Class<? extends Module>, Module> modules = new ConcurrentHashMap<>();
 
     static {
+        add(new AutoArmorModule());
         add(new AutoTotemModule());
         add(new BaritoneSettingsModule());
         add(new ChatCommandsModule());

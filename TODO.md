@@ -26,7 +26,6 @@ Command permissions (public private commands)
 Modules:
 
 - autoeat
-- autoarmor
 - velocity
 - aura
 - caura?
@@ -41,7 +40,6 @@ Queue for outgoing chat (drop on spam)
 
 Commands:
 
-- follow (follow player)
 - clear (clear area)
 - take (go to player, pick up dropped items and check containers in range)
 - guard (patrol and kill mobs around anchor position)
