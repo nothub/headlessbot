@@ -23,20 +23,17 @@ public class StuckDetectorModule extends Module {
         if (event.phase == TickEvent.Phase.START) return;
         if (mc.world == null) return;
         if (mc.player == null) return;
-        if (cooldown.isValid()) return;
-        else cooldown.reset();
         if (mc.player.chunkCoordX == lastX && mc.player.chunkCoordZ == lastZ) {
-            lastX = Integer.MAX_VALUE;
-            lastZ = Integer.MAX_VALUE;
+            if (cooldown.isValid()) return;
+            else cooldown.reset();
             Bot.WEBHOOK.alarm("Bot is stuck!",
                 Webhook.Field.of("\uD83D\uDE29", "Stuck in the same chunk as 15 minutes ago, imma get out of here..."),
                 Webhook.Field.of("location", StringFormat.of(mc.player))
             );
             sendChat("/kill");
-        } else {
+        }
             lastX = mc.player.chunkCoordX;
             lastZ = mc.player.chunkCoordZ;
-        }
     }
 
 }

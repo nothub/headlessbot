@@ -6,23 +6,20 @@ import baritone.api.pathing.goals.GoalXZ;
 import baritone.api.utils.BlockOptionalMeta;
 import cc.neckbeard.utils.ExpiringFlag;
 import net.minecraft.block.material.Material;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import not.hub.headlessbot.Cooldowns;
 import not.hub.headlessbot.Log;
+import not.hub.headlessbot.StringFormat;
 import not.hub.headlessbot.modules.Module;
 
 import java.time.temporal.ChronoUnit;
 import java.util.concurrent.ThreadLocalRandom;
 
-import static not.hub.headlessbot.Bot.CONFIG;
-
 public class SpawnFagBehaviour extends Module {
 
     private final ExpiringFlag printPosition = new ExpiringFlag(10, ChronoUnit.SECONDS);
-    private final ExpiringFlag printQueue = new ExpiringFlag(1, ChronoUnit.MINUTES);
 
     public SpawnFagBehaviour() {
         super();
@@ -34,32 +31,18 @@ public class SpawnFagBehaviour extends Module {
         if (mc.world == null) return;
         if (mc.player == null) return;
 
-        // TODO: put this somewhere else
-        // in 2b queue
-        if (mc.getCurrentServerData() == null) return;
-        final BlockPos pos = mc.player.getPosition();
-        if (mc.getCurrentServerData().serverIP.equals("2b2t.org")
-            && pos.getX() == 0
-            && pos.getY() == 240
-            && pos.getZ() == 0) {
-            if (!printQueue.isValid()) {
-                Log.info(name, CONFIG.hostname + " is full...");
-                printQueue.reset();
-            }
-            return;
-        }
-
-        // TODO: expose such data via json-file/redis/whatever instead
         // print infos
-        if (!printPosition.isValid()) {
-            Log.info(name, "I am at: " + pos.getX() + "x " + pos.getY() + "y " + pos.getZ() + "z (" + mc.player.dimension + ")");
+        // TODO: expose such data via json-file/redis/whatever instead
+        if (printPosition.isExpired()) {
             printPosition.reset();
+            Log.info(name, "Current location: " + StringFormat.of(mc.player));
         }
 
         // baritone
         if (Cooldowns.BARITONE.isValid()) return;
         try {
             if (BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().isPathing()) return;
+            Log.info(getClass(), "Generating new baritone goal...");
             switch (mc.player.dimension) {
                 case 0:  // Overworld
                     if (mc.world.getBlockState(mc.player.getPosition()).getMaterial() == Material.PORTAL) break;

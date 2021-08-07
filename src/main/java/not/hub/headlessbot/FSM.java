@@ -1,5 +1,6 @@
 package not.hub.headlessbot;
 
+import cc.neckbeard.utils.ExpiringFlag;
 import com.mojang.authlib.Agent;
 import com.mojang.authlib.exceptions.AuthenticationException;
 import com.mojang.authlib.exceptions.AuthenticationUnavailableException;
@@ -14,6 +15,7 @@ import not.hub.headlessbot.util.MC;
 import org.spongepowered.asm.mixin.MixinEnvironment;
 
 import java.net.Proxy;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -35,26 +37,37 @@ public class FSM implements MC {
         transitions.put(State.START, (success) -> {
             if (success) current = State.INIT_BOT;
             else current = State.PANIC;
+            Log.info(FSM.class, "State transition " + State.START.name() + " -> " + current.name());
             current.run();
         });
         transitions.put(State.INIT_BOT, (success) -> {
             if (success) current = State.LOGIN_ACCOUNT;
             else current = State.PANIC;
+            Log.info(FSM.class, "State transition " + State.INIT_BOT.name() + " -> " + current.name());
             current.run();
         });
         transitions.put(State.LOGIN_ACCOUNT, (success) -> {
             if (success) current = State.CONNECT_SERVER;
             else current = State.PANIC;
+            Log.info(FSM.class, "State transition " + State.LOGIN_ACCOUNT.name() + " -> " + current.name());
             current.run();
         });
         transitions.put(State.CONNECT_SERVER, (success) -> {
-            if (success) current = State.ACTIVE;
+            if (success) current = State.QUEUE;
             else current = State.PANIC;
+            Log.info(FSM.class, "State transition " + State.CONNECT_SERVER.name() + " -> " + current.name());
+            current.run();
+        });
+        transitions.put(State.QUEUE, (success) -> {
+            if (success) current = State.ACTIVE;
+            else current = State.CONNECT_SERVER;
+            Log.info(FSM.class, "State transition " + State.QUEUE.name() + " -> " + current.name());
             current.run();
         });
         transitions.put(State.ACTIVE, (success) -> {
             if (success) current = State.EXIT;
             else current = State.CONNECT_SERVER;
+            Log.info(FSM.class, "State transition " + State.ACTIVE.name() + " -> " + current.name());
             current.run();
         });
     }
@@ -167,6 +180,29 @@ public class FSM implements MC {
             }).thenAccept(FSM::transition);
         }),
 
+        QUEUE(() -> {
+            Log.info(FSM.class, "Checking for queue...");
+            CompletableFuture.supplyAsync(() -> {
+                ExpiringFlag notificationCooldown = new ExpiringFlag(1, ChronoUnit.MINUTES, false);
+                while (true) {
+                    Cooldowns.await(1, ChronoUnit.SECONDS);
+                    if (mc.getCurrentServerData() == null) {
+                        Log.warn(FSM.class, "Server connection lost...");
+                        return false;
+                    }
+                    if (mc.player == null) continue;
+                    if (mc.player.capabilities.isFlying && mc.player.posX == 0 && mc.player.posZ == 0) {
+                        if (notificationCooldown.isExpired()) {
+                            notificationCooldown.reset();
+                            Log.info(FSM.class, CONFIG.hostname + " is full...");
+                        }
+                        continue;
+                    }
+                    return true;
+                }
+            }).thenAccept(FSM::transition);
+        }),
+
         ACTIVE(() -> {
             ModuleManager.getModules().forEach(Module::activate);
             CompletableFuture.supplyAsync(() -> {
@@ -175,10 +211,11 @@ public class FSM implements MC {
                         Thread.sleep(50);
                     } catch (InterruptedException ex) {
                         Log.error(FSM.class, ex.getMessage());
+                        return false;
                     }
                     if (Bot.isShutdown()) return true;
                 }
-                Log.info(FSM.class, "Server connection lost...");
+                Log.warn(FSM.class, "Server connection lost...");
                 return false;
             }).thenAccept(FSM::transition);
         }),
