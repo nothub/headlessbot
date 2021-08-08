@@ -9,13 +9,10 @@ import not.hub.headlessbot.util.BlockGroups;
 
 import java.util.stream.Collectors;
 
+// TODO: why is this a module?
 public class BaritoneSettingsModule extends Module {
 
     private boolean initialized = false;
-
-    public BaritoneSettingsModule() {
-        super();
-    }
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
@@ -25,9 +22,8 @@ public class BaritoneSettingsModule extends Module {
         Settings settings = BaritoneAPI.getSettings();
         if (settings == null) return;
 
-        // TODO: https://github.com/cabaletta/baritone/issues/1400 😩
-
         if (!initialized) {
+            // TODO: this is shit
             initialized = true;
 
             settings.allowBreak.value = true;
@@ -49,14 +45,13 @@ public class BaritoneSettingsModule extends Module {
             settings.assumeWalkOnWater.value = false;
             settings.assumeWalkOnLava.value = false;
 
-            settings.allowDownward.value = false; // this creates more natural pathes (staircases etc.)
+            settings.allowDownward.value = true;
             settings.allowVines.value = true;
             settings.allowWalkOnBottomSlab.value = true;
             settings.enterPortal.value = true;
 
             settings.considerPotionEffects.value = true;
             settings.rightClickContainerOnArrival.value = true;
-            //settings.itemSaver.value = true;
 
             settings.replantCrops.value = true;
             settings.replantNetherWart.value = true;
@@ -74,8 +69,8 @@ public class BaritoneSettingsModule extends Module {
             settings.mobSpawnerAvoidanceRadius.value = 16;
             settings.mobAvoidanceRadius.value = 16;
 
-            settings.followOffsetDistance.value = 8d;
-            settings.followRadius.value = 16;
+            settings.followOffsetDistance.value = 4d;
+            settings.followRadius.value = 8;
 
             settings.echoCommands.value = true;
             settings.prefixControl.value = true;

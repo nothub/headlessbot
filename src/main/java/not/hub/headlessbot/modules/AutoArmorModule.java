@@ -1,7 +1,6 @@
 package not.hub.headlessbot.modules;
 
 import net.minecraft.init.Items;
-import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
@@ -11,11 +10,9 @@ import not.hub.headlessbot.Cooldowns;
 import not.hub.headlessbot.Log;
 import not.hub.headlessbot.util.StackSlot;
 
-public class AutoArmorModule extends Module {
+import static not.hub.headlessbot.util.PlayerStuff.quickMoveSlot;
 
-    public AutoArmorModule() {
-        super();
-    }
+public class AutoArmorModule extends Module {
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
@@ -23,22 +20,24 @@ public class AutoArmorModule extends Module {
         if (mc.world == null) return;
         if (mc.player == null) return;
         if (Cooldowns.INVENTORY.isValid()) return;
-        if (mc.player.inventory.armorItemInSlot(1).getItem() == Items.AIR && equip(EntityEquipmentSlot.LEGS)) return;
-        if (mc.player.inventory.armorItemInSlot(2).getItem() == Items.AIR && equip(EntityEquipmentSlot.CHEST)) return;
-        if (mc.player.inventory.armorItemInSlot(0).getItem() == Items.AIR && equip(EntityEquipmentSlot.FEET)) return;
-        if (mc.player.inventory.armorItemInSlot(3).getItem() == Items.AIR) equip(EntityEquipmentSlot.HEAD);
+        if (mc.player.inventory.armorItemInSlot(1).getItem() == Items.AIR && replaceArmor(EntityEquipmentSlot.LEGS))
+            return;
+        if (mc.player.inventory.armorItemInSlot(2).getItem() == Items.AIR && replaceArmor(EntityEquipmentSlot.CHEST))
+            return;
+        if (mc.player.inventory.armorItemInSlot(0).getItem() == Items.AIR && replaceArmor(EntityEquipmentSlot.FEET))
+            return;
+        if (mc.player.inventory.armorItemInSlot(3).getItem() == Items.AIR) replaceArmor(EntityEquipmentSlot.HEAD);
     }
 
-    private boolean equip(EntityEquipmentSlot type) {
-        StackSlot replacement = findReplacement(type);
+    private boolean replaceArmor(EntityEquipmentSlot type) {
+        StackSlot replacement = findArmor(type);
         if (replacement == null) return false;
         Log.info(getClass(), "Equipping " + replacement.stack.getItem().getRegistryName() + " as " + type.getName());
-        mc.playerController.windowClick(0, replacement.slot < 9 ? replacement.slot + 36 : replacement.slot, 0, ClickType.QUICK_MOVE, mc.player);
-        Cooldowns.INVENTORY.reset();
+        quickMoveSlot(replacement.slot);
         return true;
     }
 
-    public StackSlot findReplacement(EntityEquipmentSlot type) {
+    public StackSlot findArmor(EntityEquipmentSlot type) {
         for (int i = 0; i < 36; i++) {
             final ItemStack stack = mc.player.inventory.getStackInSlot(i);
             if (!(stack.getItem() instanceof ItemArmor)) continue;
@@ -46,4 +45,5 @@ public class AutoArmorModule extends Module {
         }
         return null;
     }
+
 }

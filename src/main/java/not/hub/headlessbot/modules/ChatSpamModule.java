@@ -2,7 +2,6 @@ package not.hub.headlessbot.modules;
 
 import cc.neckbeard.utils.ExpiringFlag;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.time.temporal.ChronoUnit;
@@ -13,7 +12,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class ChatSpamModule extends Module {
 
     private static final Set<String> messages = new HashSet<>();
-    private static final ExpiringFlag cooldown = new ExpiringFlag(3, ChronoUnit.HOURS, true);
+    private static final ExpiringFlag cooldown = new ExpiringFlag(1, ChronoUnit.HOURS, true);
 
     public ChatSpamModule() {
         super();
@@ -23,7 +22,7 @@ public class ChatSpamModule extends Module {
         messages.add("But I'm going to do it anyway, because yolo!");
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    @SubscribeEvent
     public void onChat(ClientChatReceivedEvent ev) {
         if (cooldown.isValid()) return;
         else cooldown.reset();

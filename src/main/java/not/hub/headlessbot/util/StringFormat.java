@@ -1,4 +1,4 @@
-package not.hub.headlessbot;
+package not.hub.headlessbot.util;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;

@@ -3,10 +3,9 @@ package not.hub.headlessbot.modules;
 import baritone.api.BaritoneAPI;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import not.hub.headlessbot.Log;
-import not.hub.headlessbot.StringFormat;
+import not.hub.headlessbot.util.StringFormat;
 import not.hub.headlessbot.util.TriConsumer;
 
 import java.util.*;
@@ -15,6 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+// TODO: why is this a module?
 public class ChatCommandsModule extends Module {
 
     private static final String PREFIX = "~";
@@ -63,7 +63,7 @@ public class ChatCommandsModule extends Module {
         });
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    @SubscribeEvent
     public void onChat(ClientChatReceivedEvent ev) {
         // Important! We ignore the difference of chat and system type messages,
         // because half of the servers have fucked the logic with plugins anyways...

@@ -6,7 +6,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import not.hub.headlessbot.Bot;
 import not.hub.headlessbot.Log;
-import not.hub.headlessbot.StringFormat;
+import not.hub.headlessbot.util.StringFormat;
 import not.hub.headlessbot.util.Webhook;
 
 import java.time.temporal.ChronoUnit;

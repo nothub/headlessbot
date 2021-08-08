@@ -1,14 +1,13 @@
 package not.hub.headlessbot;
 
 import not.hub.headlessbot.modules.*;
-import not.hub.headlessbot.modules.behaviour.SpawnFagBehaviour;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
-public class ModuleManager {
+public class ModuleRegistry {
 
     private static final Map<Class<? extends Module>, Module> modules = new ConcurrentHashMap<>();
 
@@ -18,13 +17,13 @@ public class ModuleManager {
         add(new BaritoneSettingsModule());
         add(new ChatCommandsModule());
         add(new ChatSpamModule());
+        add(new DataExportModule());
+        add(new DisconnectDetectorModule());
         add(new RespawnModule());
         add(new StuckDetectorModule());
-        // TODO: behaviour as nested fsm
-        add(new SpawnFagBehaviour());
     }
 
-    public static Stream<? extends Module> getModules() {
+    public static Stream<? extends Module> getAll() {
         return modules.values().stream();
     }
 
