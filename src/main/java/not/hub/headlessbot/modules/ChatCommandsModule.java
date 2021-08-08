@@ -28,28 +28,28 @@ public class ChatCommandsModule extends Module {
 
     public ChatCommandsModule() {
         super();
-        commands.put("help", (sender, label, args) -> sendChat("Commands: " + String.join(", ", commands.keySet())));
+        commands.put("help", (sender, label, args) -> sendChat("I run around spawn and die a lot, I also accept any tpa request. Check ~commands for more commands..."));
         commands.put("commands", (sender, label, args) -> sendChat("Commands: " + String.join(", ", commands.keySet())));
         commands.put("pos", (sender, label, args) -> sendChat("I am at " + StringFormat.of(mc.player)));
-        commands.put("test", (sender, label, args) -> sendChat(sender + " I can hear you but i have no brain sorry... You said: " + label + String.join(" ", args)));
+        commands.put("test", (sender, label, args) -> sendChat(sender + " I can hear you but I have no brain sorry... You said: " + label + " " + String.join(" ", args)));
         commands.put("nearby", (sender, label, args) -> {
-            final String players = mc.world.playerEntities.stream().filter(entityPlayer -> !entityPlayer.getUniqueID().equals(mc.player.getUniqueID())).map(EntityPlayer::getName).collect(Collectors.joining(", "));
-            sendChat("dude idk man there is so much shit here, cobble and lava and " + (players.isEmpty() ? "withers and shit..." : players));
+            final String players = mc.world.playerEntities.stream().filter(entityPlayer -> !entityPlayer.getUniqueID().equals(mc.player.getUniqueID())).map(EntityPlayer::getName).collect(Collectors.joining(" and "));
+            sendChat("Dude idk there is so much shit here, blocks and air and " + (players.isEmpty() ? "withers" : players) + " and shit...");
         });
         commands.put("follow", (sender, label, args) -> {
             Optional<EntityPlayer> target = mc.world.playerEntities.stream()
                 .filter(entityPlayer -> entityPlayer.getName().equalsIgnoreCase(sender))
                 .findAny();
             if (!target.isPresent()) {
-                sendChat("idk man");
+                sendChat("Uhh man idk...");
                 return;
             }
-            sendChat("okay");
+            sendChat("Okay, omw!");
             BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().cancelEverything();
             BaritoneAPI.getProvider().getPrimaryBaritone().getCommandManager().execute("follow player " + sender);
         });
         commands.put("resetgoal", (sender, label, args) -> {
-            sendChat("okay, i dont care");
+            sendChat("Okay, i dont care...");
             BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().cancelEverything();
         });
         commands.put("kill", (sender, label, args) -> {
@@ -57,9 +57,12 @@ public class ChatCommandsModule extends Module {
             sendChat("/kill");
         });
         commands.put("baritone", (sender, label, args) -> {
-            sendChat("okay, let me try to do that");
             BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().cancelEverything();
-            BaritoneAPI.getProvider().getPrimaryBaritone().getCommandManager().execute(String.join(" ", args));
+            if (BaritoneAPI.getProvider().getPrimaryBaritone().getCommandManager().execute(String.join(" ", args))) {
+                sendChat("Okay, let me try to do that...");
+            } else {
+                sendChat("No sorry man, I have no idea what your talking about... Check https://github.com/cabaletta/baritone/blob/master/USAGE.md");
+            }
         });
     }
 
