@@ -1,12 +1,12 @@
 package not.hub.headlessbot.modules;
 
 import baritone.api.BaritoneAPI;
+import cc.neckbeard.utils.functional.TriConsumer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import not.hub.headlessbot.Log;
 import not.hub.headlessbot.util.StringFormat;
-import not.hub.headlessbot.util.TriConsumer;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
