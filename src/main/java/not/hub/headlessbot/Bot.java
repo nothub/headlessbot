@@ -9,7 +9,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import not.hub.headlessbot.fsm.Controller;
-import not.hub.headlessbot.fsm.Startup;
+import not.hub.headlessbot.fsm.StartupFsm;
 import not.hub.headlessbot.util.Webhook;
 
 
@@ -20,8 +20,10 @@ public class Bot {
     public static final String VERSION = "0.0.0-SNAPSHOT";
     public static final Config CONFIG = Config.load();
 
-    public static final Controller CONTROLLER = new Controller();
     public static final Webhook WEBHOOK = new Webhook(CONFIG.webhook);
+    public static final Controller CONTROLLER = new Controller();
+
+    public static StartupFsm FSM_STARTUP; // we have to init this with fml init, not before!
 
     private static boolean shutdown = false;
 
@@ -48,14 +50,17 @@ public class Bot {
     @Mod.EventHandler
     public void fmlInit(FMLPostInitializationEvent event) {
         Log.info("FML init state", "POST_INIT");
-        if (Startup.getCurrent() == Startup.State.START) Startup.transition(true);
-        else throw new IllegalStateException("Invalid fsm transition source state" + Startup.getCurrent().name());
+
+        FSM_STARTUP = new StartupFsm();
+
+        if (FSM_STARTUP.current() == StartupFsm.State.START) FSM_STARTUP.transition(true);
+        else throw new IllegalStateException("Invalid fsm transition source state" + FSM_STARTUP.current().name());
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onInitGui(GuiScreenEvent.InitGuiEvent.Post event) {
-        if (Startup.getCurrent() == Startup.State.INIT_BOT) Startup.transition(true);
-        else throw new IllegalStateException("Invalid fsm transition source state" + Startup.getCurrent().name());
+        if (FSM_STARTUP.current() == StartupFsm.State.INIT_BOT) FSM_STARTUP.transition(true);
+        else throw new IllegalStateException("Invalid fsm transition source state" + FSM_STARTUP.current().name());
         MinecraftForge.EVENT_BUS.unregister(this);
     }
 
