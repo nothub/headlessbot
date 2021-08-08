@@ -19,32 +19,28 @@ fi
 cd "$(dirname "${BASH_SOURCE[0]}")"/..
 ./gradlew clean jar --stacktrace
 
-cd docker
-if [ ! -d mc ]; then
+if [ ! -d work ]; then
   # copy mc launcher files
-  mkdir -p mc
-  cp -R $MC_PATH/launcher mc/
-  cp -R $MC_PATH/libraries mc/
-  mkdir -p mc/versions/$FORGE_VER && cp -R $MC_PATH/versions/$FORGE_VER mc/versions/
-  cp -R $MC_PATH/versions/version_manifest_v2.json mc/versions/
+  mkdir -p work/versions/$FORGE_VER
+  cp -R $MC_PATH/launcher work/
+  cp -R $MC_PATH/libraries work/
+  cp -R $MC_PATH/versions/$FORGE_VER work/versions/
+  cp -R $MC_PATH/versions/version_manifest_v2.json work/versions/
   # client options
   {
     echo "lang:en_us"
     echo "autoJump:false"
     echo "renderDistance:6"
     echo "pauseOnLostFocus:false"
-  } >mc/options.txt
+  } >work/options.txt
   # download mods
-  mkdir -p mc/mods
-  curl -L $URL_HEADLESSFORGE -o mc/mods/headlessforge-1.1.jar
-  curl -L $URL_BARITONE -o mc/mods/baritone-api-forge-1.2.15.jar
+  mkdir -p work/mods
+  curl -L $URL_HEADLESSFORGE -o work/mods/headlessforge-1.1.jar
+  curl -L $URL_BARITONE -o work/mods/baritone-api-forge-1.2.15.jar
   md5sum -c mods.md5
 fi
 
-cp ../build/libs/headlessbot-*.jar mc/mods/
-
-# sanitize file names
-if detox -V >/dev/null 2>&1; then detox -v -r ./configs; fi
+cp build/libs/headlessbot-*.jar work/mods/
 
 # TODO: replace the following crap with something like docker-compose
 
@@ -62,3 +58,11 @@ for f in ./configs/*.json; do
   docker run -tid --rm -v "$(realpath "$f"):/opt/app/headless.json" --name "$name" headlessbot:dev
   sleep 10
 done
+
+# # cleanup
+#docker rmi -f webserver_node
+#docker-compose rm -f
+##sudo rm -rf data
+#
+## run
+#docker-compose up --force-recreate

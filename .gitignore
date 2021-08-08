@@ -21,18 +21,15 @@
 !/gradlew
 !/gradlew.bat
 
-#docker
-!/docker/scripts/**
-!/docker/.dockerignore
-!/docker/Dockerfile
-!/docker/configs/example.json
-!/docker/mods.md5
-
-# scripts
-!/scripts/**
+# docker
+!/Dockerfile
+!/docker-compose.yml
 
 # misc
 !/.github/**
+!/scripts/**
+!/configs/example.json
 !/*.md
 !/.editorconfig
 !/LICENSE
+!/mods.md5
