@@ -15,7 +15,7 @@ import java.util.Set;
 
 public class StuckDetectorModule extends Module {
 
-    private final ExpiringFlag cooldown = new ExpiringFlag(15, ChronoUnit.MINUTES);
+    private final ExpiringFlag cooldown = new ExpiringFlag(60, ChronoUnit.MINUTES);
     private final Set<Long> visited = new HashSet<>();
 
     @Override
@@ -33,12 +33,12 @@ public class StuckDetectorModule extends Module {
         if (cooldown.isValid()) return;
         else cooldown.reset();
         if (visited.size() > 4) {
-            Log.info(getClass(), "Visited " + visited.size() + " different chunks in the last 15 minutes!");
+            Log.info(getClass(), "Visited " + visited.size() + " different chunks in the last 60 minutes!");
             visited.clear();
             return;
         }
         Bot.WEBHOOK.alarm("Bot is stuck!",
-            Webhook.Field.of("\uD83D\uDE29", "Stuck in the same chunks as 15 minutes ago, imma get out of here..."),
+            Webhook.Field.of("\uD83D\uDE29", "Stuck in the same chunks as 60 minutes ago, imma get out of here..."),
             Webhook.Field.of("location", StringFormat.of(mc.player))
         );
         sendChat("/kill");
