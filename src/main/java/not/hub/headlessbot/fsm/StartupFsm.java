@@ -19,88 +19,63 @@ import org.spongepowered.asm.mixin.MixinEnvironment;
 
 import java.net.Proxy;
 import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static not.hub.headlessbot.Bot.CONFIG;
 
-// TODO: implement FSM
-public class Startup implements MC {
+public class StartupFsm extends Fsm<Boolean> implements MC {
 
-    private static final Map<State, Consumer<Boolean>> transitions = new HashMap<>();
-    private static State current = State.START;
-
-    static {
-        transitions.put(State.START, (success) -> {
+    public StartupFsm() {
+        super(State.START);
+        add(State.START, (success) -> {
             if (success) current = State.INIT_BOT;
             else current = State.PANIC;
-            Log.info(Startup.class, "State transition " + State.START.name() + " -> " + current.name());
+            Log.info(StartupFsm.class, "State transition " + State.START.name() + " -> " + current.name());
             current.run();
         });
-        transitions.put(State.INIT_BOT, (success) -> {
+        add(State.INIT_BOT, (success) -> {
             if (success) current = State.LOGIN_ACCOUNT;
             else current = State.PANIC;
-            Log.info(Startup.class, "State transition " + State.INIT_BOT.name() + " -> " + current.name());
+            Log.info(StartupFsm.class, "State transition " + State.INIT_BOT.name() + " -> " + current.name());
             current.run();
         });
-        transitions.put(State.LOGIN_ACCOUNT, (success) -> {
+        add(State.LOGIN_ACCOUNT, (success) -> {
             if (success) current = State.CONNECT_SERVER;
             else current = State.PANIC;
-            Log.info(Startup.class, "State transition " + State.LOGIN_ACCOUNT.name() + " -> " + current.name());
+            Log.info(StartupFsm.class, "State transition " + State.LOGIN_ACCOUNT.name() + " -> " + current.name());
             current.run();
         });
-        transitions.put(State.CONNECT_SERVER, (success) -> {
+        add(State.CONNECT_SERVER, (success) -> {
             if (success) current = State.QUEUE;
             else current = State.PANIC;
-            Log.info(Startup.class, "State transition " + State.CONNECT_SERVER.name() + " -> " + current.name());
+            Log.info(StartupFsm.class, "State transition " + State.CONNECT_SERVER.name() + " -> " + current.name());
             current.run();
         });
-        transitions.put(State.QUEUE, (success) -> {
+        add(State.QUEUE, (success) -> {
             if (success) current = State.ACTIVE;
             else current = State.CONNECT_SERVER;
-            Log.info(Startup.class, "State transition " + State.QUEUE.name() + " -> " + current.name());
+            Log.info(StartupFsm.class, "State transition " + State.QUEUE.name() + " -> " + current.name());
             current.run();
         });
-        transitions.put(State.ACTIVE, (success) -> {
+        add(State.ACTIVE, (success) -> {
             if (success) current = State.EXIT;
             else current = State.CONNECT_SERVER;
-            Log.info(Startup.class, "State transition " + State.ACTIVE.name() + " -> " + current.name());
+            Log.info(StartupFsm.class, "State transition " + State.ACTIVE.name() + " -> " + current.name());
             current.run();
         });
-    }
-
-    private Startup() {
-    }
-
-    /**
-     * @return current state
-     */
-    public static State getCurrent() {
-        return current;
-    }
-
-    /**
-     * Transition to next state
-     *
-     * @param success success of current state
-     */
-    public static void transition(boolean success) {
-        transitions.get(current).accept(success);
     }
 
     /**
      * FSM States
      */
-    public enum State {
+    public enum State implements FsmState {
 
         START(() -> {
-            Log.info(Startup.class, "Hello World!");
+            Log.info(StartupFsm.class, "Hello World!");
         }),
 
         INIT_BOT(() -> {
@@ -135,7 +110,7 @@ public class Startup implements MC {
 
         LOGIN_ACCOUNT(() -> {
             if (mc.getSession().getUsername().equals(CONFIG.username)) {
-                Log.warn(Startup.class, "Already logged in!");
+                Log.warn(StartupFsm.class, "Already logged in!");
                 return;
             }
             // TODO: central place shared between workers for tracking accout login delays?
@@ -149,76 +124,76 @@ public class Startup implements MC {
                     auth.getSelectedProfile().getId().toString(),
                     auth.getAuthenticatedToken(), "mojang");
                 ((IMinecraft) mc).session(session);
-                Log.info(Startup.class, "Login Success! Username is " + mc.getSession().getUsername());
-                transition(true);
+                Log.info(StartupFsm.class, "Login Success! Username is " + mc.getSession().getUsername());
+                Bot.FSM_STARTUP.transition(true);
             } catch (AuthenticationUnavailableException e) {
-                Log.error(Startup.class, "Login Error! Authentication servers are unavailable (ratelimit/blacklist)! " + e.getMessage());
-                transition(false);
+                Log.error(StartupFsm.class, "Login Error! Authentication servers are unavailable (ratelimit/blacklist)! " + e.getMessage());
+                Bot.FSM_STARTUP.transition(false);
             } catch (AuthenticationException e) {
-                Log.error(Startup.class, "Login Error! " + e.getMessage());
-                transition(false);
+                Log.error(StartupFsm.class, "Login Error! " + e.getMessage());
+                Bot.FSM_STARTUP.transition(false);
             }
         }),
 
         CONNECT_SERVER(() -> {
             CompletableFuture.supplyAsync(() -> {
-                Log.info(Startup.class, "Awaiting connection cooldown for " + CONFIG.hostname);
+                Log.info(StartupFsm.class, "Awaiting connection cooldown for " + CONFIG.hostname);
                 Cooldowns.await(Cooldowns.CONNECT, true);
-                Log.info(Startup.class, "Starting connection with " + CONFIG.hostname);
+                Log.info(StartupFsm.class, "Starting connection with " + CONFIG.hostname);
                 try {
                     mc.addScheduledTask(() -> NetworkUtil.INSTANCE.connect(CONFIG.hostname)).get(10, TimeUnit.SECONDS);
                 } catch (InterruptedException | ExecutionException ex) {
-                    Log.error(Startup.class, ex.getMessage());
+                    Log.error(StartupFsm.class, ex.getMessage());
                     return false;
                 } catch (TimeoutException ex) {
-                    Log.warn(Startup.class, "Timeout after 10 seconds: " + ex.getMessage());
+                    Log.warn(StartupFsm.class, "Timeout after 10 seconds: " + ex.getMessage());
                     return false;
                 }
                 if (mc.getCurrentServerData() != null) {
-                    Log.info(Startup.class, "Connected to server " + mc.getCurrentServerData().serverIP);
+                    Log.info(StartupFsm.class, "Connected to server " + mc.getCurrentServerData().serverIP);
                     Bot.WEBHOOK.info("Connected to server " + mc.getCurrentServerData().serverIP);
                     return true;
                 }
-                Log.error(Startup.class, "Server connection failed!");
+                Log.error(StartupFsm.class, "Server connection failed!");
                 return false;
-            }).thenAccept(Startup::transition);
+            }).thenAccept(Bot.FSM_STARTUP::transition);
         }),
 
         QUEUE(() -> {
             Bot.CONTROLLER.deactivate();
-            Log.info(Startup.class, "Checking for queue...");
+            Log.info(StartupFsm.class, "Checking for queue...");
             CompletableFuture.supplyAsync(() -> {
                 ExpiringFlag notificationCooldown = new ExpiringFlag(1, ChronoUnit.MINUTES, false);
                 while (true) {
                     Cooldowns.await(1, ChronoUnit.SECONDS);
                     if (mc.getCurrentServerData() == null) {
-                        Log.warn(Startup.class, "Server connection lost...");
+                        Log.warn(StartupFsm.class, "Server connection lost...");
                         return false;
                     }
                     if (mc.player == null) continue;
                     if (mc.player.capabilities.isFlying) {
                         if (notificationCooldown.isExpired()) {
                             notificationCooldown.reset();
-                            Log.info(Startup.class, CONFIG.hostname + " is full...");
+                            Log.info(StartupFsm.class, CONFIG.hostname + " is full...");
                         }
                         continue;
                     }
                     Bot.WEBHOOK.info("Ready on " + mc.getCurrentServerData().serverIP);
                     return true;
                 }
-            }).thenAccept(Startup::transition);
+            }).thenAccept(Bot.FSM_STARTUP::transition);
         }),
 
         ACTIVE(Bot.CONTROLLER::activate),
 
         PANIC(() -> {
-            Log.error(Startup.class, "PANIC! cya...");
-            Log.info(Startup.class, "Exiting with code 1");
+            Log.error(StartupFsm.class, "PANIC! cya...");
+            Log.info(StartupFsm.class, "Exiting with code 1");
             FMLCommonHandler.instance().exitJava(1, false);
         }),
 
         EXIT(() -> {
-            Log.info(Startup.class, "Exiting with code 0");
+            Log.info(StartupFsm.class, "Exiting with code 0");
             FMLCommonHandler.instance().exitJava(0, false);
         }),
         ;
@@ -229,8 +204,9 @@ public class Startup implements MC {
             this.r = r;
         }
 
-        private void run() {
-            Log.info(Startup.class, "Executing " + this.name());
+        @Override
+        public void run() {
+            Log.info(StartupFsm.class, "Executing " + this.name());
             r.run();
         }
 

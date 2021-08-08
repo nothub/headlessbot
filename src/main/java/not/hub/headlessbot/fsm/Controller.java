@@ -51,8 +51,8 @@ public class Controller implements MC {
 
         // TODO: move this out of controller context
         if (Bot.isShutdown()) {
-            if (Startup.getCurrent() == Startup.State.ACTIVE) Startup.transition(true);
-            else throw new IllegalStateException("Invalid fsm transition source state" + Startup.getCurrent().name());
+            if (Bot.FSM_STARTUP.current() == StartupFsm.State.ACTIVE) Bot.FSM_STARTUP.transition(true);
+            else throw new IllegalStateException("Invalid fsm transition source state" + Bot.FSM_STARTUP.current().name());
             return;
         }
 
