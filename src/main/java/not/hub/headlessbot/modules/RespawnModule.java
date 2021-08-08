@@ -4,10 +4,7 @@ import cc.neckbeard.utils.ExpiringFlag;
 import net.minecraft.client.gui.GuiGameOver;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import not.hub.headlessbot.Bot;
 import not.hub.headlessbot.Log;
-import not.hub.headlessbot.util.StringFormat;
-import not.hub.headlessbot.util.Webhook;
 
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
@@ -40,7 +37,6 @@ public class RespawnModule extends Module {
             || mc.player.getHealth() < 0) {
             Log.info(name, "Respawning...");
             mc.displayGuiScreen(null);
-            Bot.WEBHOOK.alarm("Bot died!", Webhook.Field.of("location", StringFormat.of(mc.player)));
             mc.player.respawnPlayer();
             if (messageCooldown.isValid()) return;
             else messageCooldown.reset();
