@@ -53,7 +53,7 @@ dependencies {
     }
 
     compileOnly 'com.google.code.gson:gson:2.8.7'
-    compileOnly 'org.jetbrains:annotations:21.0.1'
+    compileOnly 'org.jetbrains:annotations:22.0.0'
     compileOnly 'com.github.3arthqu4ke:HeadlessForge:1.1'
 
     jarLibs 'cc.neckbeard:java-utils:1.4.1'
