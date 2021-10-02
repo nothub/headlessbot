@@ -10,6 +10,8 @@ Headless Minecraft bot using [cabaletta/baritone](https://github.com/cabaletta/b
 
 > Needs Java 8, Docker, Minecraft 1.12.2 and Forge for 1.12.2.
 
-Configuration goes to: `docker/headless.json`
+Create config in: `configs/`
+
+Edit `docker-compose.yml`
 
 Build and run with: [`./scripts/run.sh`](./scripts/run.sh)
