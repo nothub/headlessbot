@@ -1,0 +1,18 @@
+version: "3.1"
+
+services:
+
+  db:
+    image: redis:alpine
+    command: redis-server
+    restart: always
+    ports:
+      - 127.0.0.1:6379:6379
+
+  bot-tim:
+    image: headlessbot:dev
+    depends_on:
+      - db
+    tty: true
+    volumes:
+      - ./configs/example.json:/opt/app/headless.json
