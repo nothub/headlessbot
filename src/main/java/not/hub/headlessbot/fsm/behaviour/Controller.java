@@ -1,4 +1,4 @@
-package not.hub.headlessbot.fsm;
+package not.hub.headlessbot.fsm.behaviour;
 
 import baritone.api.BaritoneAPI;
 import baritone.api.pathing.goals.GoalBlock;

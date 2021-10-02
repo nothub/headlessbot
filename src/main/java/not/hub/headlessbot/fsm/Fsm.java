@@ -8,7 +8,7 @@ import java.util.function.Consumer;
 public abstract class Fsm<T> {
 
     private final Map<FsmState, Consumer<T>> transitions = new HashMap<>();
-    FsmState current;
+    protected FsmState current;
 
     public Fsm(FsmState start) {
         this.current = start;

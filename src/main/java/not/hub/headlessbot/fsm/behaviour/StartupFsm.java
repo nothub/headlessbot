@@ -1,4 +1,4 @@
-package not.hub.headlessbot.fsm;
+package not.hub.headlessbot.fsm.behaviour;
 
 import cc.neckbeard.utils.ExpiringFlag;
 import com.mojang.authlib.Agent;
@@ -13,6 +13,8 @@ import not.hub.headlessbot.Bot;
 import not.hub.headlessbot.Cooldowns;
 import not.hub.headlessbot.Log;
 import not.hub.headlessbot.ModuleRegistry;
+import not.hub.headlessbot.fsm.Fsm;
+import not.hub.headlessbot.fsm.FsmState;
 import not.hub.headlessbot.mixins.IMinecraft;
 import not.hub.headlessbot.util.MC;
 import org.spongepowered.asm.mixin.MixinEnvironment;
