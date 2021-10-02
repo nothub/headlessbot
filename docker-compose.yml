@@ -15,4 +15,4 @@ services:
       - db
     tty: true
     volumes:
-      - ./configs/0b0t.json:/opt/app/headless.json
+      - ./configs/example.json:/opt/app/headless.json
