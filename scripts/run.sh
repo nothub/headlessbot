@@ -42,27 +42,15 @@ fi
 
 cp build/libs/headlessbot-*.jar build/docker/mods/
 
-# TODO: replace the following crap with something like docker-compose
-
 # use rootless if possible
 docker --version || sudo su
 
-# rebuild image
+# cleanup
+docker-compose rm -f
 docker rmi -f headlessbot:dev
+
+# rebuild image
 docker build . -t headlessbot:dev
 
-# run worker for each config file
-for f in ./configs/*.json; do
-  name=headlessbot_$(basename "$f" | cut -d'.' -f1)
-  echo "starting worker $name"
-  docker run -tid --rm -v "$(realpath "$f"):/opt/app/headless.json" --name "$name" headlessbot:dev
-  sleep 10
-done
-
-# # cleanup
-#docker rmi -f webserver_node
-#docker-compose rm -f
-##sudo rm -rf data
-#
-## run
-#docker-compose up --force-recreate
+# run
+docker-compose up #--force-recreate

@@ -1,5 +1,6 @@
 package not.hub.headlessbot;
 
+import net.minecraft.client.gui.GuiDisconnected;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
@@ -8,8 +9,8 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import not.hub.headlessbot.fsm.Controller;
-import not.hub.headlessbot.fsm.StartupFsm;
+import not.hub.headlessbot.fsm.behaviour.Controller;
+import not.hub.headlessbot.fsm.behaviour.StartupFsm;
 import not.hub.headlessbot.util.Webhook;
 
 
@@ -62,6 +63,12 @@ public class Bot {
         if (FSM_STARTUP.current() == StartupFsm.State.INIT_BOT) FSM_STARTUP.transition(true);
         else throw new IllegalStateException("Invalid fsm transition source state" + FSM_STARTUP.current().name());
         MinecraftForge.EVENT_BUS.unregister(this);
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onGuiDisconnected(GuiScreenEvent.InitGuiEvent.Post event) {
+        if (!(event.getGui() instanceof GuiDisconnected)) return;
+        FSM_STARTUP.transition(false);
     }
 
 }

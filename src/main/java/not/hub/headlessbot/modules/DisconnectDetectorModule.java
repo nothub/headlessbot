@@ -6,7 +6,7 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import not.hub.headlessbot.Bot;
 import not.hub.headlessbot.Log;
-import not.hub.headlessbot.fsm.StartupFsm;
+import not.hub.headlessbot.fsm.behaviour.StartupFsm;
 
 // TODO: why is this a module? we also need this logic while in queue...
 public class DisconnectDetectorModule extends Module {
