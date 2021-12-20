@@ -7,6 +7,7 @@ buildscript {
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
         classpath 'org.spongepowered:mixingradle:0.7.32'
+        classpath 'org.owasp:dependency-check-gradle:6.5.1'
     }
 }
 
@@ -16,6 +17,7 @@ plugins {
 
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
+apply plugin: 'org.owasp.dependencycheck'
 
 group = project.mod_group
 archivesBaseName = project.mod_name
@@ -86,6 +88,12 @@ sourceSets {
     }
 }
 
+dependencyCheck {
+    failBuildOnCVSS=4.0
+    cveValidForHours=1
+}
+check.dependsOn dependencyCheckAnalyze
+
 jar {
     manifest {
         attributes(
@@ -103,5 +111,4 @@ jar {
         }
     }
 }
-
 jar.finalizedBy('reobfJar')
