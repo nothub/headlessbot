@@ -30,9 +30,13 @@ fi
 mkdir -p mc/mods
 
 # install fabric api
-if test ! -e "mc/mods/fabric-api.jar"; then
-    curl -sSL -o "mc/mods/fabric-api.jar" \
-    "https://cdn.modrinth.com/data/P7dR8mSH/versions/LKgVmlZB/fabric-api-0.87.0+1.19.4.jar"
+if test ! -e "mc/mods/fabric-api-0.87.0+1.19.4.jar"; then
+    curl -sSLO "https://cdn.modrinth.com/data/P7dR8mSH/versions/LKgVmlZB/fabric-api-0.87.0+1.19.4.jar"
+fi
+
+# install baritone
+if test ! -e "mc/mods/baritone-api-fabric-1.9.3.jar"; then
+    curl -sSLO "https://github.com/cabaletta/baritone/releases/download/v1.9.3/baritone-api-fabric-1.9.3.jar"
 fi
 
 # install mod
