@@ -4,6 +4,7 @@
   "version": "@mod_version@",
   "name": "headlessbot",
   "description": "",
+  "icon": "assets/headlessbot/icon.png",
   "authors": [
     "nothub"
   ],
