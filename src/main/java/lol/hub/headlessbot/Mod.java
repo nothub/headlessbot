@@ -8,6 +8,9 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.text.Text;
 
 public class Mod implements ModInitializer, ClientModInitializer {
+
+    public static long lastKeepAlive;
+
     @Override
     public void onInitialize() {
     }
