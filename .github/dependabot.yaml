@@ -5,11 +5,8 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-      time: "12:00"
-      timezone: "Europe/Berlin"
+    target-branch: "main"
     assignees:
-      - "nothub"
-    reviewers:
       - "nothub"
     commit-message:
       prefix: "gradle"
@@ -19,11 +16,8 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-      time: "12:00"
-      timezone: "Europe/Berlin"
+    target-branch: "main"
     assignees:
-      - "nothub"
-    reviewers:
       - "nothub"
     commit-message:
       prefix: "github-actions"
