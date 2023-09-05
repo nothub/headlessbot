@@ -14,17 +14,17 @@ volumes="-v ${PWD}/mc:/work/.minecraft -v ${PWD}/hmc:/work/HeadlessMC"
 
 # msa login
 if test ! -f "hmc/auth/.account.json"; then
-    docker run --rm ${volumes} headlessmc:latest "login" "<username>" "<password>"
+    docker run --rm ${volumes} n0thub/headlessmc:latest login "${1}" "${2}"
 fi
 
 # download mc
 if test ! -e "mc/versions/1.19.4"; then
-    docker run --rm ${volumes} headlessmc:latest "download" "1.19.4"
+    docker run --rm ${volumes} n0thub/headlessmc:latest download "1.19.4"
 fi
 
 # download fabric
 if test ! -e "mc/versions/fabric-loader-0.14.22-1.19.4"; then
-    docker run --rm ${volumes} headlessmc:latest "fabric" "1.19.4"
+    docker run --rm ${volumes} n0thub/headlessmc:latest fabric "1.19.4"
 fi
 
 mkdir -p mc/mods
@@ -39,4 +39,4 @@ fi
 cp "../build/libs/headlessbot.jar" "mc/mods/"
 
 # run
-docker run -it --rm ${volumes} n0thub/headlessmc:latest "launch" "fabric-loader-0.14.22-1.19.4"
+docker run -it --rm ${volumes} n0thub/headlessmc:latest launch "fabric-loader-0.14.22-1.19.4"
