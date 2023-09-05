@@ -1,9 +1,0 @@
-version: "3.1"
-
-services:
-
-  bot-example:
-    image: headlessbot:dev
-    tty: true
-    volumes:
-      - ./configs/example.json:/opt/app/headless.json

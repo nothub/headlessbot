@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "headlessbot",
+  "version": "@mod_version@",
+  "name": "headlessbot",
+  "description": "",
+  "authors": [
+    "nothub"
+  ],
+  "contact": {
+    "sources": "https://github.com/nothub/headlessbot.git"
+  },
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "lol.hub.headlessbot.Mod"
+    ],
+    "main": [
+      "lol.hub.headlessbot.Mod"
+    ]
+  },
+  "mixins": [
+    "headlessbot.mixins.json"
+  ],
+  "depends": {
+    "java": ">=17",
+    "minecraft": "@minecraft_version@",
+    "fabricloader": ">=@fabric_loader_version@",
+    "fabric": ">=@fabric_api_version@"
+  }
+}

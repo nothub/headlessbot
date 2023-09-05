@@ -1,114 +1,36 @@
-buildscript {
-    repositories {
-        maven { url = "https://plugins.gradle.org/m2" }
-        maven { url = "https://maven.minecraftforge.net" }
-        maven { url = 'https://repo.spongepowered.org/repository/maven-public' }
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
-        classpath 'org.spongepowered:mixingradle:0.7.32'
-        classpath 'org.owasp:dependency-check-gradle:7.1.1'
-    }
-}
-
 plugins {
-    id 'java'
+    id 'fabric-loom' version '1.2-SNAPSHOT'
+    id 'maven-publish'
 }
 
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'org.spongepowered.mixin'
-apply plugin: 'org.owasp.dependencycheck'
-
-group = project.mod_group
-archivesBaseName = project.mod_name
+group = project.maven_group
 version = project.mod_version
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(8)
-
-minecraft {
-    mappings channel: 'stable', version: '39-1.12'
-}
-
-configurations {
-    jarLibs
-}
-
-repositories {
-    mavenCentral()
-    maven { url 'https://repo.spongepowered.org/repository/maven-public' }
-    maven { url "https://maven-eclipse.github.io/maven" }
-    maven { url "https://jitpack.io" }
-}
-
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2854'
-    jarLibs("org.spongepowered:mixin:0.7.11-SNAPSHOT") {
-        exclude module: 'launchwrapper'
-        exclude module: 'guava'
-        exclude module: 'gson'
-        exclude module: 'commons-io'
-    }
-    // lol why does this work and is there a better way?
-    // https://github.com/kami-blue/client/blob/5a9e51a124cf18ec2e73b63a8dc2e2fbb0d3a43a/build.gradle#L112
-    annotationProcessor('org.spongepowered:mixin:0.8.2:processor') {
-        exclude module: 'gson'
-    }
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+}
 
-    compileOnly 'com.google.code.gson:gson:2.9.0'
-    compileOnly 'org.jetbrains:annotations:23.0.0'
-    compileOnly 'com.github.3arthqu4ke:HeadlessForge:1.1'
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
 
-    jarLibs 'cc.neckbeard:java-utils:1.4.1'
-    jarLibs 'club.minnced:discord-webhooks:0.8.2'
-    implementation configurations.jarLibs
-
-    // For some reason the api at v1.2.15 exposes remapped values and breaks the build, so we use v1.2.14
-    implementation 'com.github.cabaletta:baritone:v1.2.14'
+tasks.withType(JavaCompile).configureEach {
+    it.options.encoding = "UTF-8"
+    it.options.release = 17
 }
 
 processResources {
-    inputs.property "version", project.version
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-        expand 'version': project.version
-    }
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
-}
-
-mixin {
-    defaultObfuscationEnv 'searge'
-    add sourceSets.main, 'mixins.headlessbot.refmap.json'
-}
-
-sourceSets {
-    main {
-        ext.refMap = "mixins.headlessbot.refmap.json"
+    filteringCharset "UTF-8"
+    filesMatching("fabric.mod.json") {
+        filter { line -> line.replace("@mod_version@", project.mod_version) }
+        filter { line -> line.replace("@minecraft_version@", project.minecraft_version) }
+        filter { line -> line.replace("@fabric_loader_version@", project.fabric_loader_version) }
+        filter { line -> line.replace("@fabric_api_version@", project.fabric_api_version) }
     }
 }
 
-dependencyCheck {
-    failBuildOnCVSS=4.0
-    cveValidForHours=1
+remapJar {
+    archiveFileName = "${project.mod_name}.jar"
 }
-check.dependsOn dependencyCheckAnalyze
-
-jar {
-    manifest {
-        attributes(
-            'MixinConfigs': 'mixins.headlessbot.json',
-            'tweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
-            'TweakOrder': 0,
-            'FMLCorePluginContainsFMLMod': 'true',
-            'FMLCorePlugin': 'not.hub.headlessbot.MixinLoaderForge',
-            'ForceLoadAsMod': 'true'
-        )
-    }
-    from {
-        configurations.jarLibs.collect {
-            it.isDirectory() ? it : zipTree(it)
-        }
-    }
-}
-jar.finalizedBy('reobfJar')
