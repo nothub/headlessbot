@@ -56,7 +56,7 @@ dependencies {
 
     compileOnly 'com.google.code.gson:gson:2.9.0'
     compileOnly 'org.jetbrains:annotations:23.0.0'
-    compileOnly 'com.github.3arthqu4ke:HeadlessForge:1.1'
+    compileOnly 'com.github.3arthqu4ke:HeadlessForge:1.2.0'
 
     jarLibs 'cc.neckbeard:java-utils:1.4.1'
     jarLibs 'club.minnced:discord-webhooks:0.8.2'
