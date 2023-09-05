@@ -1,35 +1,7 @@
-# ignore all files
-*
-# but include directories
-!*/
+/**/.idea/
+/**/.vscode/
 
-# git
-!/**/.gitkeep
-!/.gitattributes
-!/.gitignore
-!/.gitmodules
+/.gradle/
+/build/
 
-# java
-!/src/**
-
-# gradle
-!/build.gradle
-!/gradle.properties
-!/settings.gradle
-# gradle wrapper
-!/gradle/**
-!/gradlew
-!/gradlew.bat
-
-# docker
-!/Dockerfile
-!/docker-compose.yml
-
-# misc
-!/.github/**
-!/scripts/**
-!/configs/example.json
-!/*.md
-!/.editorconfig
-!/LICENSE
-!/mods.md5
+/run/

@@ -7,12 +7,17 @@ indent_style = space
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-[*.java]
+[*.{gradle,java}]
 indent_size = 4
 
-[*.{json, toml, xml, yml}]
+[*.sh]
+indent_size = 4
+
+[*.{json,yaml}]
 indent_size = 2
 
+[Makefile]
+indent_style = tab
+
 [*.md]
-max_line_length = 9001
 trim_trailing_whitespace = false
