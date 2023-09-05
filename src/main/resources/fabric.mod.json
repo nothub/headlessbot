@@ -1,16 +1,18 @@
 {
   "schemaVersion": 1,
   "id": "headlessbot",
-  "version": "@mod_version@",
   "name": "headlessbot",
+  "version": "@mod_version@",
   "description": "",
   "icon": "assets/headlessbot/icon.png",
-  "authors": [
-    "nothub"
-  ],
   "contact": {
     "sources": "https://github.com/nothub/headlessbot.git"
   },
+  "authors": [
+    "nothub"
+  ],
+  "contributors": [
+  ],
   "license": "MIT",
   "environment": "client",
   "entrypoints": {
@@ -28,6 +30,7 @@
     "java": ">=17",
     "minecraft": "@minecraft_version@",
     "fabricloader": ">=@fabric_loader_version@",
-    "fabric": ">=@fabric_api_version@"
+    "fabric": ">=@fabric_api_version@",
+    "baritone": ">=@baritone_version@"
   }
 }
