@@ -1,0 +1,12 @@
+{
+  "fabric-api": {
+    "file": "fabric-api-0.87.0+1.19.4.jar",
+    "url": "https://cdn.modrinth.com/data/P7dR8mSH/versions/LKgVmlZB/fabric-api-0.87.0+1.19.4.jar",
+    "sha256": "0fda5f17240f3793d03a2c7b11acc43495cdecc58c04d2d26fc6f55cf4902d68"
+  },
+  "baritone": {
+    "file": "baritone-api-fabric-1.9.3.jar",
+    "url": "https://github.com/cabaletta/baritone/releases/download/v1.9.3/baritone-api-fabric-1.9.3.jar",
+    "sha256": "5274a6e45af275a3b961bbb67f9da30f8c5dff4bf7d23e5bb3fb39e31220de9b"
+  }
+}
