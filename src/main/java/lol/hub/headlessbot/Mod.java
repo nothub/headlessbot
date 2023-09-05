@@ -30,6 +30,7 @@ public class Mod implements ModInitializer, ClientModInitializer {
             }
 
             for (AbstractClientPlayerEntity player : client.world.getPlayers()) {
+                if (player.getUuid().equals(client.player.getUuid())) continue;
                 System.err.printf("seeing player: %s (%s)\n", player.getGameProfile().getName(), player.getUuid().toString());
             }
         });
