@@ -17,7 +17,7 @@ public class RepeatNode extends DecoratorNode {
     @Override
     public State run() {
         do {
-            var result = child.run();
+            var result = child().run();
             if (result == State.FAILURE && exitOnFail) {
                 return State.FAILURE;
             }

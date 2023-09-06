@@ -4,10 +4,11 @@ import lol.hub.headlessbot.behaviour.State;
 
 /*   parent 0-1 child   */
 public final class RootNode extends Node {
-    final Node child;
+    private final Node child;
 
     public RootNode(Node child) {
         this.child = child;
+        child.parent(this);
     }
 
     @Override

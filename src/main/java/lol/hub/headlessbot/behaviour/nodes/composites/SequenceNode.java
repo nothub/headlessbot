@@ -11,7 +11,7 @@ public class SequenceNode extends CompositeNode {
 
     @Override
     public State run() {
-        for (Node child : children) {
+        for (Node child : children()) {
             if (child.run() == State.FAILURE) return State.FAILURE;
         }
         return State.SUCCESS;

@@ -11,7 +11,7 @@ public class SelectorNode extends CompositeNode {
 
     @Override
     public State run() {
-        for (Node child : children) {
+        for (Node child : children()) {
             if (child.run() == State.SUCCESS) return State.SUCCESS;
         }
         return State.FAILURE;

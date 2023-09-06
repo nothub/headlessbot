@@ -15,7 +15,7 @@ public class ForeverNode extends DecoratorNode {
     @Override
     public State run() {
         while (true) {
-            var result = child.run();
+            var result = child().run();
             if (result == State.FAILURE && exitOnFail) {
                 return State.FAILURE;
             }

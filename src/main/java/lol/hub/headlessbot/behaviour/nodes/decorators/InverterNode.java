@@ -11,7 +11,7 @@ public class InverterNode extends DecoratorNode {
 
     @Override
     public State run() {
-        var state = child.run();
+        var state = child().run();
         switch (state) {
             case SUCCESS -> {
                 return State.FAILURE;
