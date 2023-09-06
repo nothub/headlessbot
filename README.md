@@ -5,6 +5,4 @@ and [cabaletta/baritone](https://github.com/cabaletta/baritone).
 
 ---
 
-## Usage
-
-// TODO
+HMC port WiP
