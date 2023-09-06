@@ -3,19 +3,17 @@ package lol.hub.headlessbot.behaviour.nodes.composite;
 import lol.hub.headlessbot.behaviour.State;
 import lol.hub.headlessbot.behaviour.nodes.Node;
 
-import java.util.List;
-
+// AND
 public class SequenceNode extends CompositeNode {
-    public final List<Node> children;
-
-    public SequenceNode(Node parent, Node... children) {
-        super(parent);
-        this.children = List.of(children);
+    public SequenceNode(Node... children) {
+        super(children);
     }
 
     @Override
     public State run() {
-        // TODO
-        return null;
+        for (Node child : children) {
+            if (child.run() == State.FAILURE) return State.FAILURE;
+        }
+        return State.SUCCESS;
     }
 }

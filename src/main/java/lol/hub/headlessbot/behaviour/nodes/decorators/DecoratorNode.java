@@ -2,11 +2,11 @@ package lol.hub.headlessbot.behaviour.nodes.decorators;
 
 import lol.hub.headlessbot.behaviour.nodes.Node;
 
+/*   parent 1-1 child   */
 public abstract class DecoratorNode extends Node {
-    public final Node child;
+    final Node child;
 
-    public DecoratorNode(Node parent, Node child) {
-        super(parent);
+    public DecoratorNode(Node child) {
         this.child = child;
     }
 }

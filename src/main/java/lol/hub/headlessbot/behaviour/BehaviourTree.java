@@ -1,10 +1,12 @@
 package lol.hub.headlessbot.behaviour;
 
-import lol.hub.headlessbot.behaviour.nodes.decorators.RootNode;
+import lol.hub.headlessbot.behaviour.nodes.RootNode;
 
 public class BehaviourTree {
 
     /* https://www.gamedeveloper.com/programming/behavior-trees-for-ai-how-they-work */
+
+    // TODO: tick based executor
 
     private final RootNode root;
 
