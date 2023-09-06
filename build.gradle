@@ -53,5 +53,5 @@ processResources {
 }
 
 remapJar {
-    archiveFileName = "bot.jar"
+    archiveFileName = "${project.mod_name}.jar"
 }
