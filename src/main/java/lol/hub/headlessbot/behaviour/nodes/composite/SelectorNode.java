@@ -1,5 +1,6 @@
 package lol.hub.headlessbot.behaviour.nodes.composite;
 
+import lol.hub.headlessbot.behaviour.State;
 import lol.hub.headlessbot.behaviour.nodes.Node;
 
 import java.util.List;
@@ -10,5 +11,11 @@ public class SelectorNode extends CompositeNode {
     public SelectorNode(Node parent, Node... children) {
         super(parent);
         this.children = List.of(children);
+    }
+
+    @Override
+    public State run() {
+        // TODO
+        return null;
     }
 }
