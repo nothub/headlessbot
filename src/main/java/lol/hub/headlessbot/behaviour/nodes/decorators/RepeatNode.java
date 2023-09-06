@@ -3,6 +3,7 @@ package lol.hub.headlessbot.behaviour.nodes.decorators;
 import lol.hub.headlessbot.behaviour.State;
 import lol.hub.headlessbot.behaviour.nodes.Node;
 
+// WHILE N>0
 public class RepeatNode extends DecoratorNode {
     private final boolean exitOnFail;
     private int count;
