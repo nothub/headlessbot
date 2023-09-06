@@ -1,0 +1,36 @@
+package lol.hub.headlessbot;
+
+import net.minecraft.block.Block;
+
+import java.util.Set;
+
+import static net.minecraft.block.Blocks.*;
+
+public enum BlockGroups {
+
+    THROWAWAY(STONE, GRANITE, POLISHED_GRANITE, DIORITE, POLISHED_DIORITE, ANDESITE, POLISHED_ANDESITE, GRASS_BLOCK, DIRT, COARSE_DIRT, PODZOL, COBBLESTONE),
+
+    PLANKS(OAK_PLANKS, SPRUCE_PLANKS, BIRCH_PLANKS, JUNGLE_PLANKS, ACACIA_PLANKS, CHERRY_PLANKS, DARK_OAK_PLANKS, MANGROVE_PLANKS, BAMBOO_PLANKS),
+
+    LOGS(OAK_LOG, SPRUCE_LOG, BIRCH_LOG, JUNGLE_LOG, ACACIA_LOG, CHERRY_LOG, DARK_OAK_LOG, MANGROVE_LOG, STRIPPED_SPRUCE_LOG, STRIPPED_BIRCH_LOG, STRIPPED_JUNGLE_LOG, STRIPPED_ACACIA_LOG, STRIPPED_CHERRY_LOG, STRIPPED_DARK_OAK_LOG, STRIPPED_OAK_LOG, STRIPPED_MANGROVE_LOG),
+
+    WOOL(),
+
+    GLASS(),
+
+    TERRACOTTA(),
+
+    CONCRETE(),
+
+    GRAVITY(),
+
+    SHULKER_BOX(),
+
+    ;
+
+    public final Set<Block> blocks;
+
+    BlockGroups(Block... blocks) {
+        this.blocks = Set.of(blocks);
+    }
+}
