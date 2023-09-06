@@ -4,16 +4,18 @@ import baritone.api.BaritoneAPI;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Mod implements ModInitializer, ClientModInitializer {
 
     public static long lastKeepAlive;
     public static long ticksOnline;
+    public Set<Object> modules = new HashSet<>();
 
     @Override
     public void onInitialize() {
@@ -39,7 +41,7 @@ public class Mod implements ModInitializer, ClientModInitializer {
 
             for (AbstractClientPlayerEntity player : MC.world().getPlayers()) {
                 if (player.getUuid().equals(MC.player().getUuid())) continue;
-                Log.info("seeing player: %s (%s)", player.getGameProfile().getName(), player.getUuid().toString());
+                // Log.info("player in close proximity: %s (%s)", player.getGameProfile().getName(), player.getUuid().toString());
             }
         });
 
@@ -57,31 +59,20 @@ public class Mod implements ModInitializer, ClientModInitializer {
 
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
             Log.warn("client disconnected");
-            client.close();
-            //System.exit(0);
-        });
-
-        ClientReceiveMessageEvents.CHAT.register((message, signedMessage, sender, params, receptionTimestamp) -> {
-            var msg = message.getString();
-            Log.info("received chat message %s", msg);
-            Chat.handleMessage(msg);
-        });
-
-        ClientReceiveMessageEvents.GAME.register((message, overlay) -> {
-            if (overlay) {
-                Log.info("overlay message: %s", message.getString());
-                return;
+            try {
+                client.close();
+            } catch (Exception ex) {
+                Log.error(ex.getMessage());
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    Log.error(ex.getMessage());
+                }
+                System.exit(0);
             }
-
-            // Some servers send normal player chat with system type,
-            // so this could be a normal player message.
-            // For that reason, we just ignore message types
-            // and handle all (non-overlay) messages in the same way.
-
-            var msg = message.getString();
-            Log.info("received chat (system) message %s", msg);
-            Chat.handleMessage(msg);
         });
+
+        modules.add(new Chat());
     }
 
     private void configureBaritone() {

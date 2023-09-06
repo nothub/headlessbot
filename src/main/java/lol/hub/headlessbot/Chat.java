@@ -1,84 +1,70 @@
 package lol.hub.headlessbot;
 
-import net.minecraft.entity.Entity;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.jetbrains.annotations.Nullable;
+import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 
-import java.util.UUID;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Consumer;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static net.minecraft.util.Util.NIL_UUID;
-
 public class Chat {
-    private static final Pattern consoleSenderPattern = Pattern.compile("\\[Server\\] (.+)");
-    private static final Pattern playerSenderPattern = Pattern.compile("<([a-zA-Z0-9_]{3,16})> (.+)");
+    public static final Pattern PATTERN_CHAT = Pattern.compile("<([a-zA-Z0-9_]{3,16})> (.+)");
+    public static final Pattern PATTERN_CHAT_CONSOLE = Pattern.compile("\\[Server\\] (.+)");
+    public static final Pattern PATTERN_WHISPER = Pattern.compile("([a-zA-Z0-9_]{3,16}) whispers to you: (.+)");
+    private final Map<Pattern, Consumer<Matcher>> handlers;
 
-    public static void handleMessage(String raw) {
-        Message msg = null;
+    public Chat() {
+        this.handlers = new HashMap<>();
 
-        var consoleSenderMatcher = consoleSenderPattern.matcher(raw);
-        var playerSenderMatcher = playerSenderPattern.matcher(raw);
-        if (consoleSenderMatcher.matches()) {
-            msg = new Chat.Message("Server", consoleSenderMatcher.group(0));
-        } else if (playerSenderMatcher.matches()) {
-            var name = playerSenderMatcher.group(0);
-            var uuid = MC.players().filter(p -> p.getName().getString().equalsIgnoreCase(name))
-                .map(Entity::getUuid).findAny().orElse(null);
-            msg = new Chat.Message(name, uuid, playerSenderMatcher.group(1));
-        }
+        // default handlers
+        register(PATTERN_CHAT, matcher -> {
+            var msg = new Chat.Message(matcher.group(1), matcher.group(2));
+            Log.info("detected chat message: %s", msg.toString());
+        });
+        register(PATTERN_CHAT_CONSOLE, matcher -> {
+            var msg = new Chat.Message("Server", matcher.group(1));
+            Log.info("detected server-console chat message: %s", msg.toString());
+        });
+        register(PATTERN_WHISPER, matcher -> {
+            var msg = new Chat.Message(matcher.group(1), matcher.group(2));
+            Log.info("detected whisper message: %s", msg.toString());
+        });
 
-        if (msg == null) {
-            Log.info("Unable to parse chat message: %s", raw);
-            return;
-        }
+        ClientReceiveMessageEvents.CHAT.register((message, signedMessage, sender, params, receptionTimestamp) -> {
+            handle(message.getString());
+        });
 
-        Log.error("TODO publish message to module listeners: %s", ReflectionToStringBuilder.toString(msg));
+        ClientReceiveMessageEvents.GAME.register((message, overlay) -> {
+            if (overlay) {
+                Log.info("overlay message: %s", message.getString());
+                return;
+            }
+
+            // Some servers send normal player chat with system type,
+            // so this could be a normal player message.
+            // For that reason, we just ignore message types
+            // and handle all (non-overlay) messages in the same way.
+            handle(message.getString());
+        });
     }
 
-    public static final class Message {
-        private final String senderName;
-        private final UUID senderUUID;
-        private final String message;
-        private final long time;
+    public void register(Pattern pattern, Consumer<Matcher> handler) {
+        handlers.put(pattern, handler);
+    }
 
-        public Message(String senderName, @Nullable UUID senderUUID, String message, long time) {
-            this.senderName = senderName;
-            if (senderUUID == null) this.senderUUID = NIL_UUID;
-            else this.senderUUID = senderUUID;
-            this.message = message;
-            this.time = time;
+    private void handle(String message) {
+        for (Map.Entry<Pattern, Consumer<Matcher>> entry : handlers.entrySet()) {
+            var matcher = entry.getKey().matcher(message);
+            if (matcher.matches()) {
+                entry.getValue().accept(matcher);
+            }
         }
+    }
 
-        public Message(String senderName, @Nullable UUID senderUUID, String message) {
-            this(senderName, senderUUID, message, System.currentTimeMillis());
-        }
-
-        public Message(String senderName, String message, long time) {
-            this(senderName, NIL_UUID, message, time);
-        }
-
-        public Message(String senderName, String message) {
-            this(senderName, NIL_UUID, message, System.currentTimeMillis());
-        }
-
-        public String senderName() {
-            return senderName;
-        }
-
-        public UUID senderUUID() {
-            return senderUUID;
-        }
-
-        public boolean isPlayer() {
-            return senderUUID != null && !senderUUID.equals(NIL_UUID);
-        }
-
-        public String message() {
-            return message;
-        }
-
-        public long time() {
-            return time;
+    public record Message(String sender, String message, long time) {
+        public Message(String sender, String message) {
+            this(sender, message, System.currentTimeMillis());
         }
     }
 }
