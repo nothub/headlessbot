@@ -4,6 +4,7 @@ import baritone.api.BaritoneAPI;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 
@@ -25,19 +26,19 @@ public class Mod implements ModInitializer, ClientModInitializer {
         });
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (client.player == null || client.world == null) return;
+            if (!MC.inGame()) return;
             ticksOnline++;
 
-            if (client.player.isDead()) {
+            if (MC.player().isDead()) {
                 if (ticksOnline % 20 == 0) {
                     Log.info("requesting respawn");
-                    client.player.requestRespawn();
+                    MC.player().requestRespawn();
                 }
                 return;
             }
 
-            for (AbstractClientPlayerEntity player : client.world.getPlayers()) {
-                if (player.getUuid().equals(client.player.getUuid())) continue;
+            for (AbstractClientPlayerEntity player : MC.world().getPlayers()) {
+                if (player.getUuid().equals(MC.player().getUuid())) continue;
                 Log.info("seeing player: %s (%s)", player.getGameProfile().getName(), player.getUuid().toString());
             }
         });
@@ -58,6 +59,28 @@ public class Mod implements ModInitializer, ClientModInitializer {
             Log.warn("client disconnected");
             client.close();
             //System.exit(0);
+        });
+
+        ClientReceiveMessageEvents.CHAT.register((message, signedMessage, sender, params, receptionTimestamp) -> {
+            var msg = message.getString();
+            Log.info("received chat message %s", msg);
+            Chat.handleMessage(msg);
+        });
+
+        ClientReceiveMessageEvents.GAME.register((message, overlay) -> {
+            if (overlay) {
+                Log.info("overlay message: %s", message.getString());
+                return;
+            }
+
+            // Some servers send normal player chat with system type,
+            // so this could be a normal player message.
+            // For that reason, we just ignore message types
+            // and handle all (non-overlay) messages in the same way.
+
+            var msg = message.getString();
+            Log.info("received chat (system) message %s", msg);
+            Chat.handleMessage(msg);
         });
     }
 
@@ -129,13 +152,7 @@ public class Mod implements ModInitializer, ClientModInitializer {
 
         //settings.acceptableThrowawayItems.value.addAll(BlockGroups.PATHING_BLOCKS.items);
 
-        Log.info("Baritone initialized with settings:\n"
-            + settings
-            .allSettings
-            .stream()
-            .map(s -> "  - " + s.getName() + ": " + s.value)
-            .collect(Collectors.joining("\n"))
-        );
+        Log.info("Baritone initialized with settings:\n" + settings.allSettings.stream().map(s -> "  - " + s.getName() + ": " + s.value).collect(Collectors.joining("\n")));
 
         /*
          *       TODO: check hunger levels
