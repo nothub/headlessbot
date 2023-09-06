@@ -10,21 +10,22 @@ cd "$(realpath "$(dirname "$(readlink -f "$0")")")"
 mkdir -p run
 cd run
 
-volumes="-v ${PWD}/mc:/work/.minecraft -v ${PWD}/hmc:/work/HeadlessMC"
+# shellcheck disable=SC2139
+alias headlessmc="docker run --rm -v ${PWD}/mc:/work/.minecraft -v ${PWD}/hmc:/work/HeadlessMC n0thub/headlessmc:latest"
 
 # msa login
 if test ! -f "hmc/auth/.account.json"; then
-    docker run --rm ${volumes} n0thub/headlessmc:latest login "${1}" "${2}"
+    headlessmc login "${1}" "${2}"
 fi
 
 # download mc
 if test ! -e "mc/versions/1.19.4"; then
-    docker run --rm ${volumes} n0thub/headlessmc:latest download "1.19.4"
+    headlessmc download "1.19.4"
 fi
 
 # download fabric
 if test ! -e "mc/versions/fabric-loader-0.14.22-1.19.4"; then
-    docker run --rm ${volumes} n0thub/headlessmc:latest fabric "1.19.4"
+    headlessmc fabric "1.19.4"
 fi
 
 mkdir -p mc/mods
@@ -40,7 +41,7 @@ if test ! -e "mc/mods/baritone-api-fabric-1.9.3.jar"; then
 fi
 
 # install mod
-cp "../build/libs/headlessbot.jar" "mc/mods/"
+cp "../build/libs/bot.jar" "mc/mods/"
 
-# run
-docker run -it --rm ${volumes} n0thub/headlessmc:latest launch "fabric-loader-0.14.22-1.19.4"
+# run client
+headlessmc launch "fabric-loader-0.14.22-1.19.4"
