@@ -1,7 +1,6 @@
 package lol.hub.headlessbot;
 
 import baritone.api.BaritoneAPI;
-import lol.hub.tinyeventbus.Bus;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -11,8 +10,6 @@ import net.minecraft.client.network.AbstractClientPlayerEntity;
 import java.util.stream.Collectors;
 
 public class Mod implements ModInitializer, ClientModInitializer {
-
-    public static final Bus bus = new Bus();
 
     public static long lastKeepAlive;
     public static long ticksOnline;
