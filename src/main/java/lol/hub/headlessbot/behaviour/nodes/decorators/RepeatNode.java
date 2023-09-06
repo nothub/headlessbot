@@ -20,7 +20,7 @@ public class RepeatNode extends DecoratorNode {
             if (result == State.FAILURE && exitOnFail) {
                 return State.FAILURE;
             }
-        } while (count-- > 0);
+        } while (--count > 0);
         return State.SUCCESS;
     }
 }
