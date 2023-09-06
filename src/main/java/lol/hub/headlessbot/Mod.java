@@ -23,7 +23,7 @@ public class Mod implements ModInitializer, ClientModInitializer {
 
             if (client.player.isDead()) {
                 if (ticksOnline % 20 == 0) {
-                    System.err.println("requesting respawn");
+                    Log.info("requesting respawn");
                     client.player.requestRespawn();
                 }
                 return;
@@ -31,7 +31,7 @@ public class Mod implements ModInitializer, ClientModInitializer {
 
             for (AbstractClientPlayerEntity player : client.world.getPlayers()) {
                 if (player.getUuid().equals(client.player.getUuid())) continue;
-                System.err.printf("seeing player: %s (%s)\n", player.getGameProfile().getName(), player.getUuid().toString());
+                Log.info("seeing player: %s (%s)", player.getGameProfile().getName(), player.getUuid().toString());
             }
         });
 
@@ -42,11 +42,11 @@ public class Mod implements ModInitializer, ClientModInitializer {
             var serverInfo = netHandler.getServerInfo();
             if (serverInfo == null) return;
 
-            System.err.printf("client connected to %s (%s)\n", serverInfo.name, serverInfo.address);
+            Log.info("client connected to %s (%s)", serverInfo.name, serverInfo.address);
         });
 
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
-            System.err.println("client disconnected");
+            Log.warn("client disconnected");
             client.close();
             //System.exit(0);
         });
