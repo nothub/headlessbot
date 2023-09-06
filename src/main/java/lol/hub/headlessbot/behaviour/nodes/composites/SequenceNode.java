@@ -1,4 +1,4 @@
-package lol.hub.headlessbot.behaviour.nodes.composite;
+package lol.hub.headlessbot.behaviour.nodes.composites;
 
 import lol.hub.headlessbot.behaviour.State;
 import lol.hub.headlessbot.behaviour.nodes.Node;

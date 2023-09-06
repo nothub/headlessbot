@@ -6,11 +6,11 @@ import lol.hub.headlessbot.behaviour.nodes.Node;
 // WHILE N>0
 public class RepeatNode extends DecoratorNode {
     private final boolean exitOnFail;
-    private int count;
+    private int runs;
 
-    public RepeatNode(Node child, int count, boolean exitOnFail) {
+    public RepeatNode(Node child, int runs, boolean exitOnFail) {
         super(child);
-        this.count = count;
+        this.runs = runs;
         this.exitOnFail = exitOnFail;
     }
 
@@ -21,7 +21,7 @@ public class RepeatNode extends DecoratorNode {
             if (result == State.FAILURE && exitOnFail) {
                 return State.FAILURE;
             }
-        } while (--count > 0);
+        } while (--runs > 0);
         return State.SUCCESS;
     }
 }
