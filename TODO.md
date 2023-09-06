@@ -1,20 +1,28 @@
 # TODO
 
-## Imported from old project
-
-#### Assorted Ideas (to be never completed)
-
-Central controller to register ingame actions and execute based on priority (Eating, Attacking, etc.)
-
-Inventory management (steal shit from open inventories thats needed, drop trash, keep some build blocks, xcarry?)
-
-Configurable admin and user whitelist/groups + Command permissions
-
-Friend system
+- [ ] chat commands
+- [ ] test disconnect/kick
+- [ ] expiring flags
+- [ ] global cooldowns
+- [ ] module system
+- [ ]  module
+- [ ] inventory utils
+- [ ] decision tree for baritone control
+- [ ] block groups
+- [ ] check all baritone settings
+- [ ] periodic inventory cleanup
+- [ ] permission groups (admin commands)
+- [ ] friend system
+- [ ] webhook sender
+- [ ] config file
 
 Modules:
 
+- respawn
+- visualrange (say hi to players)
 - autoeat
+- autototem
+- autoarmor
 - velocity
 - aura
 - caura?
@@ -22,8 +30,7 @@ Modules:
 - noslow
 - step
 - safewalk
-- visualrange (say hi to players)
-- blink (against newfags with crystals)
+- blink (against crystals)
 
 Queue for outgoing chat (drop on spam)
 
