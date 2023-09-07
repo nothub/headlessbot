@@ -5,7 +5,7 @@ import lol.hub.headlessbot.behaviour.State;
 public abstract class Node {
     private Node parent = null;
 
-    public abstract State run();
+    public abstract State tick();
 
     public Node parent() {
         return parent;

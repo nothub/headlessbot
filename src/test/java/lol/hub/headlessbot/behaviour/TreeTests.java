@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static lol.hub.headlessbot.behaviour.State.SUCCESS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class TreeTests {
@@ -14,12 +15,12 @@ class TreeTests {
     void simple() {
         var tree = new BehaviourTree(new RootNode(new LeafNode() {
             @Override
-            public State run() {
-                return State.SUCCESS;
+            public State tick() {
+                return SUCCESS;
             }
         }));
 
-        assertEquals(tree.run(), State.SUCCESS);
+        assertEquals(tree.start(), SUCCESS);
     }
 
     @Test
@@ -27,12 +28,12 @@ class TreeTests {
         AtomicInteger i = new AtomicInteger();
         var tree = new BehaviourTree(new RootNode(new RepeatNode(new LeafNode() {
             @Override
-            public State run() {
+            public State tick() {
                 i.incrementAndGet();
-                return State.SUCCESS;
+                return SUCCESS;
             }
         }, 3, false)));
-        tree.run();
+        tree.start();
 
         assertEquals(i.get(), 3);
     }

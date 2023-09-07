@@ -12,7 +12,7 @@ public final class SubTreeNode extends LeafNode {
     }
 
     @Override
-    public State run() {
-        return tree.run();
+    public State tick() {
+        return tree.start();
     }
 }

@@ -14,7 +14,7 @@ public final class FunctionNode extends LeafNode {
     }
 
     @Override
-    public State run() {
+    public State tick() {
         return func.apply(MC.client());
     }
 }

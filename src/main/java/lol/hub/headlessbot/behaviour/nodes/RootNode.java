@@ -12,8 +12,8 @@ public final class RootNode extends Node {
     }
 
     @Override
-    public State run() {
-        return child.run();
+    public State tick() {
+        return child.tick();
     }
 
     @Override
