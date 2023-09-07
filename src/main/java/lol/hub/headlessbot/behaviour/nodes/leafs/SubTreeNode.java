@@ -13,6 +13,6 @@ public final class SubTreeNode extends LeafNode {
 
     @Override
     public State tick() {
-        return tree.start();
+        return tree.tick();
     }
 }

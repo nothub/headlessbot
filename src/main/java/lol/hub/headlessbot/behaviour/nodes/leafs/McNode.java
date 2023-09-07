@@ -6,10 +6,10 @@ import net.minecraft.client.MinecraftClient;
 
 import java.util.function.Function;
 
-public final class FunctionNode extends LeafNode {
+public class McNode extends LeafNode {
     private final Function<MinecraftClient, State> func;
 
-    public FunctionNode(Function<MinecraftClient, State> func) {
+    public McNode(Function<MinecraftClient, State> func) {
         this.func = func;
     }
 

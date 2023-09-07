@@ -1,11 +1,9 @@
 package lol.hub.headlessbot.behaviour.nodes;
 
-import lol.hub.headlessbot.behaviour.State;
+import lol.hub.headlessbot.behaviour.Tickable;
 
-public abstract class Node {
+public abstract class Node implements Tickable {
     private Node parent = null;
-
-    public abstract State tick();
 
     public Node parent() {
         return parent;

@@ -6,8 +6,8 @@ import lol.hub.headlessbot.behaviour.nodes.Node;
 import static lol.hub.headlessbot.behaviour.State.*;
 
 // OR
-public class SelectorNode extends CompositeNode {
-    public SelectorNode(Node... children) {
+public class FallbackNode extends CompositeNode {
+    public FallbackNode(Node... children) {
         super(children);
     }
 

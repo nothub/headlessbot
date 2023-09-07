@@ -3,8 +3,7 @@ package lol.hub.headlessbot.behaviour.nodes.decorators;
 import lol.hub.headlessbot.behaviour.State;
 import lol.hub.headlessbot.behaviour.nodes.Node;
 
-import static lol.hub.headlessbot.behaviour.State.FAILURE;
-import static lol.hub.headlessbot.behaviour.State.SUCCESS;
+import static lol.hub.headlessbot.behaviour.State.*;
 
 // NOT
 public class InverterNode extends DecoratorNode {
@@ -22,6 +21,6 @@ public class InverterNode extends DecoratorNode {
                 return SUCCESS;
             }
         }
-        throw new IllegalStateException(String.format("child node state must be SUCCESS or FAILURE but was %s", child().tick().name()));
+        return RUNNING;
     }
 }

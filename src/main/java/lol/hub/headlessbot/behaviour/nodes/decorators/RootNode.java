@@ -1,19 +1,18 @@
-package lol.hub.headlessbot.behaviour.nodes;
+package lol.hub.headlessbot.behaviour.nodes.decorators;
 
 import lol.hub.headlessbot.behaviour.State;
+import lol.hub.headlessbot.behaviour.nodes.Node;
 
 /*   parent 0-1 child   */
-public final class RootNode extends Node {
-    private final Node child;
+public final class RootNode extends DecoratorNode {
 
     public RootNode(Node child) {
-        this.child = child;
-        child.parent(this);
+        super(child);
     }
 
     @Override
     public State tick() {
-        return child.tick();
+        return child().tick();
     }
 
     @Override
