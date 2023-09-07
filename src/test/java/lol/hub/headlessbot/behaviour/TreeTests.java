@@ -1,12 +1,13 @@
 package lol.hub.headlessbot.behaviour;
 
-import lol.hub.headlessbot.behaviour.nodes.RootNode;
 import lol.hub.headlessbot.behaviour.nodes.decorators.RepeatNode;
+import lol.hub.headlessbot.behaviour.nodes.decorators.RootNode;
 import lol.hub.headlessbot.behaviour.nodes.leafs.LeafNode;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static lol.hub.headlessbot.behaviour.State.RUNNING;
 import static lol.hub.headlessbot.behaviour.State.SUCCESS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -20,7 +21,7 @@ class TreeTests {
             }
         }));
 
-        assertEquals(tree.start(), SUCCESS);
+        assertEquals(tree.tick(), SUCCESS);
     }
 
     @Test
@@ -33,8 +34,14 @@ class TreeTests {
                 return SUCCESS;
             }
         }, 3, false)));
-        tree.start();
 
-        assertEquals(i.get(), 3);
+        assertEquals(RUNNING, tree.tick());
+        assertEquals(1, i.get());
+
+        assertEquals(RUNNING, tree.tick());
+        assertEquals(2, i.get());
+
+        assertEquals(SUCCESS, tree.tick());
+        assertEquals(3, i.get());
     }
 }
