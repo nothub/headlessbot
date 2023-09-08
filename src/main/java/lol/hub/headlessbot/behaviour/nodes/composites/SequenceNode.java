@@ -5,8 +5,11 @@ import lol.hub.headlessbot.behaviour.nodes.Node;
 
 import static lol.hub.headlessbot.behaviour.State.*;
 
-// AND
-public class SequenceNode extends CompositeNode {
+/**
+ * AND
+ * Execute children in order until a child returns failure.
+ */
+public final class SequenceNode extends CompositeNode {
 
     public SequenceNode(Node... children) {
         super(children);

@@ -7,33 +7,27 @@ import static lol.hub.headlessbot.behaviour.State.*;
 
 /**
  * WHILE N>0
- * BREAK ON FAILURE (OPTIONAL)
+ * BREAK ON SUCCESS
  */
-public final class RepeatNode extends DecoratorNode {
+public final class RetryNode extends DecoratorNode {
     private final int runs;
     private int step;
-    private final boolean breakOnFail;
 
-    public RepeatNode(Node child, int runs, boolean breakOnFail) {
+    public RetryNode(Node child, int runs) {
         super(child);
         this.runs = runs;
         this.step = runs;
-        this.breakOnFail = breakOnFail;
-    }
-
-    public RepeatNode(Node child, int runs) {
-        this(child, runs, false);
     }
 
     @Override
     public State tick() {
-        if (child().tick() == FAILURE && breakOnFail) {
-            step = runs;
-            return FAILURE;
-        }
-        if (--step == 0) {
+        if (child().tick() == SUCCESS) {
             step = runs;
             return SUCCESS;
+        }
+        if (--step <= 0) {
+            step = runs;
+            return FAILURE;
         }
         return RUNNING;
     }

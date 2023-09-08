@@ -6,7 +6,7 @@ import lol.hub.headlessbot.behaviour.nodes.Node;
 import static lol.hub.headlessbot.behaviour.State.FAILURE;
 import static lol.hub.headlessbot.behaviour.State.RUNNING;
 
-public class UntilFailureNode extends DecoratorNode {
+public final class UntilFailureNode extends DecoratorNode {
     public UntilFailureNode(Node child) {
         super(child);
     }

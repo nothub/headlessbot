@@ -5,8 +5,11 @@ import lol.hub.headlessbot.behaviour.nodes.Node;
 
 import static lol.hub.headlessbot.behaviour.State.*;
 
-// OR
-public class FallbackNode extends CompositeNode {
+/**
+ * OR
+ * Execute children in order until a child returns success.
+ */
+public final class FallbackNode extends CompositeNode {
     public FallbackNode(Node... children) {
         super(children);
     }

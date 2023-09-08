@@ -5,8 +5,10 @@ import lol.hub.headlessbot.behaviour.nodes.Node;
 
 import static lol.hub.headlessbot.behaviour.State.*;
 
-// NOT
-public class InverterNode extends DecoratorNode {
+/**
+ * NOT
+ */
+public final class InverterNode extends DecoratorNode {
     public InverterNode(Node child) {
         super(child);
     }

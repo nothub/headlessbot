@@ -6,7 +6,7 @@ import lol.hub.headlessbot.behaviour.nodes.Node;
 import static lol.hub.headlessbot.behaviour.State.RUNNING;
 import static lol.hub.headlessbot.behaviour.State.SUCCESS;
 
-public class UntilSuccessNode extends DecoratorNode {
+public final class UntilSuccessNode extends DecoratorNode {
     public UntilSuccessNode(Node child) {
         super(child);
     }
