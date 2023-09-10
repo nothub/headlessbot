@@ -12,9 +12,6 @@ public abstract class CompositeNode extends Node {
     public CompositeNode(Node... children) {
         if (children.length == 0) throw new IllegalStateException("composite node without children");
         this.children = List.of(children);
-        for (Node child : this.children) {
-            child.parent(this);
-        }
         this.index = 0;
     }
 

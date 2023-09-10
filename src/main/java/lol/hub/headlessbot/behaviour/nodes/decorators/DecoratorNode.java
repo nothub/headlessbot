@@ -8,7 +8,6 @@ public abstract class DecoratorNode extends Node {
 
     public DecoratorNode(Node child) {
         this.child = child;
-        child.parent(this);
     }
 
     public Node child() {

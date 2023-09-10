@@ -6,7 +6,7 @@ import net.minecraft.client.MinecraftClient;
 
 import java.util.function.Function;
 
-public class McNode extends LeafNode {
+public abstract class McNode extends LeafNode {
     private final Function<MinecraftClient, State> func;
 
     public McNode(Function<MinecraftClient, State> func) {

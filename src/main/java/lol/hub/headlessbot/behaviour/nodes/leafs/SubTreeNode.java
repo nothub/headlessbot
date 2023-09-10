@@ -8,7 +8,6 @@ public final class SubTreeNode extends LeafNode {
 
     public SubTreeNode(BehaviourTree tree) {
         this.tree = tree;
-        tree.root().parent(this);
     }
 
     @Override
