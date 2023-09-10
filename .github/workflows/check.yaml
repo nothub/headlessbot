@@ -13,12 +13,12 @@ jobs:
         uses: gradle/wrapper-validation-action@v1
 
       - name: 'setup java'
-      - uses: actions/setup-java@v3
+        uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
           java-version: '17'
           cache: 'gradle'
 
       - name: 'run checks'
-      - run: |
+        run: |
           make check
