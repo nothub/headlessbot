@@ -1,19 +1,19 @@
-package lol.hub.headlessbot.behaviour;
+package lol.hub.headlessbot.behavior;
 
-import lol.hub.headlessbot.behaviour.nodes.decorators.RepeatNode;
-import lol.hub.headlessbot.behaviour.nodes.leafs.LeafNode;
+import lol.hub.headlessbot.behavior.nodes.decorators.RepeatNode;
+import lol.hub.headlessbot.behavior.nodes.leafs.LeafNode;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static lol.hub.headlessbot.behaviour.State.RUNNING;
-import static lol.hub.headlessbot.behaviour.State.SUCCESS;
+import static lol.hub.headlessbot.behavior.State.RUNNING;
+import static lol.hub.headlessbot.behavior.State.SUCCESS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class TreeTests {
     @Test
     void simple() {
-        var tree = new BehaviourTree(new LeafNode() {
+        var tree = new BehaviorTree(new LeafNode() {
             @Override
             public State tick() {
                 return SUCCESS;
@@ -26,7 +26,7 @@ class TreeTests {
     @Test
     void repeat() {
         AtomicInteger i = new AtomicInteger();
-        var tree = new BehaviourTree(new RepeatNode(new LeafNode() {
+        var tree = new BehaviorTree(new RepeatNode(new LeafNode() {
             @Override
             public State tick() {
                 i.incrementAndGet();
