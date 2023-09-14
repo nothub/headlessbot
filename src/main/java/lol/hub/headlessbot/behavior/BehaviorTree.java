@@ -1,16 +1,16 @@
-package lol.hub.headlessbot.behaviour;
+package lol.hub.headlessbot.behavior;
 
-import lol.hub.headlessbot.behaviour.nodes.Node;
-import lol.hub.headlessbot.behaviour.nodes.composites.CompositeNode;
-import lol.hub.headlessbot.behaviour.nodes.decorators.DecoratorNode;
-import lol.hub.headlessbot.behaviour.nodes.leafs.LeafNode;
+import lol.hub.headlessbot.behavior.nodes.Node;
+import lol.hub.headlessbot.behavior.nodes.composites.CompositeNode;
+import lol.hub.headlessbot.behavior.nodes.decorators.DecoratorNode;
+import lol.hub.headlessbot.behavior.nodes.leafs.LeafNode;
 
-public class BehaviourTree implements Tickable {
+public class BehaviorTree implements Tickable {
     /* https://www.gamedeveloper.com/programming/behavior-trees-for-ai-how-they-work */
 
     private final Node root;
 
-    public BehaviourTree(Node node) {
+    public BehaviorTree(Node node) {
         this.root = node;
     }
 
@@ -31,6 +31,25 @@ public class BehaviourTree implements Tickable {
     }
 
     public void validate(Node node) {
+
+        /* java 21 feature:
+        switch (node) {
+            case null -> {
+
+            }
+            case CompositeNode n -> {
+
+            }
+            case DecoratorNode n -> {
+
+            }
+            case LeafNode n -> {
+
+            }
+            default -> throw new NotImplementedException();
+        }
+        */
+
         if (node instanceof CompositeNode n) {
             if (n.children().size() < 2) {
                 throw new AssertionError("composite node with less then 2 children");

@@ -1,6 +1,6 @@
-package lol.hub.headlessbot.behaviour.nodes.composites;
+package lol.hub.headlessbot.behavior.nodes.composites;
 
-import lol.hub.headlessbot.behaviour.nodes.Node;
+import lol.hub.headlessbot.behavior.nodes.Node;
 
 import java.util.List;
 

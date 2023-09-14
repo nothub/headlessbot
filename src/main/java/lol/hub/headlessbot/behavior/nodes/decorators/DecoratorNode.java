@@ -1,6 +1,6 @@
-package lol.hub.headlessbot.behaviour.nodes.decorators;
+package lol.hub.headlessbot.behavior.nodes.decorators;
 
-import lol.hub.headlessbot.behaviour.nodes.Node;
+import lol.hub.headlessbot.behavior.nodes.Node;
 
 /*   parent 1-1 child   */
 public abstract class DecoratorNode extends Node {

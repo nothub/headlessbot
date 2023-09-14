@@ -1,9 +1,7 @@
-package lol.hub.headlessbot.behaviour.nodes.leafs;
+package lol.hub.headlessbot.behavior.nodes.leafs;
 
-import baritone.api.pathing.goals.Goal;
-
-import static lol.hub.headlessbot.behaviour.State.FAILURE;
-import static lol.hub.headlessbot.behaviour.State.SUCCESS;
+import static lol.hub.headlessbot.behavior.State.FAILURE;
+import static lol.hub.headlessbot.behavior.State.SUCCESS;
 
 public final class McCheckReadyNode extends McNode {
     public McCheckReadyNode() {

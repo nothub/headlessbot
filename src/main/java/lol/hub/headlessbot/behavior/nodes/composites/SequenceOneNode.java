@@ -1,18 +1,19 @@
-package lol.hub.headlessbot.behaviour.nodes.composites;
+package lol.hub.headlessbot.behavior.nodes.composites;
 
-import lol.hub.headlessbot.behaviour.State;
-import lol.hub.headlessbot.behaviour.nodes.Node;
+import lol.hub.headlessbot.behavior.State;
+import lol.hub.headlessbot.behavior.nodes.Node;
 
-import static lol.hub.headlessbot.behaviour.State.*;
+import static lol.hub.headlessbot.behavior.State.*;
 
 /**
  * AND
- * Execute children in order, one per tick, until a child returns failure.
+ * Execute children in order, one per tick,
+ * until a child returns FAILURE.
  */
-public final class SequenceNode extends CompositeNode {
+public final class SequenceOneNode extends CompositeNode {
     private int index = 0;
 
-    public SequenceNode(Node... children) {
+    public SequenceOneNode(Node... children) {
         super(children);
     }
 

@@ -1,7 +1,7 @@
-package lol.hub.headlessbot.behaviour.nodes.leafs;
+package lol.hub.headlessbot.behavior.nodes.leafs;
 
 import lol.hub.headlessbot.MC;
-import lol.hub.headlessbot.behaviour.State;
+import lol.hub.headlessbot.behavior.State;
 import net.minecraft.client.MinecraftClient;
 
 import java.util.function.Function;

@@ -1,10 +1,10 @@
-package lol.hub.headlessbot.behaviour.nodes.leafs;
+package lol.hub.headlessbot.behavior.nodes.leafs;
 
 import baritone.api.BaritoneAPI;
 import baritone.api.pathing.goals.Goal;
 
-import static lol.hub.headlessbot.behaviour.State.RUNNING;
-import static lol.hub.headlessbot.behaviour.State.SUCCESS;
+import static lol.hub.headlessbot.behavior.State.RUNNING;
+import static lol.hub.headlessbot.behavior.State.SUCCESS;
 
 public class BaritoneGoalNode extends McNode {
     public BaritoneGoalNode(Goal goal) {

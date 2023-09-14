@@ -1,18 +1,19 @@
-package lol.hub.headlessbot.behaviour.nodes.composites;
+package lol.hub.headlessbot.behavior.nodes.composites;
 
-import lol.hub.headlessbot.behaviour.State;
-import lol.hub.headlessbot.behaviour.nodes.Node;
+import lol.hub.headlessbot.behavior.State;
+import lol.hub.headlessbot.behavior.nodes.Node;
 
-import static lol.hub.headlessbot.behaviour.State.*;
+import static lol.hub.headlessbot.behavior.State.*;
 
 /**
  * OR
- * Execute children in order, one per tick, until a child returns success.
+ * Execute children in order, one per tick,
+ * until a child returns SUCCESS.
  */
-public final class FallbackNode extends CompositeNode {
+public final class FallbackOneNode extends CompositeNode {
     private int index = 0;
 
-    public FallbackNode(Node... children) {
+    public FallbackOneNode(Node... children) {
         super(children);
     }
 

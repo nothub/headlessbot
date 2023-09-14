@@ -1,10 +1,10 @@
-package lol.hub.headlessbot.behaviour.nodes.decorators;
+package lol.hub.headlessbot.behavior.nodes.decorators;
 
-import lol.hub.headlessbot.behaviour.State;
-import lol.hub.headlessbot.behaviour.nodes.Node;
+import lol.hub.headlessbot.behavior.State;
+import lol.hub.headlessbot.behavior.nodes.Node;
 
-import static lol.hub.headlessbot.behaviour.State.FAILURE;
-import static lol.hub.headlessbot.behaviour.State.RUNNING;
+import static lol.hub.headlessbot.behavior.State.FAILURE;
+import static lol.hub.headlessbot.behavior.State.RUNNING;
 
 public final class UntilFailureNode extends DecoratorNode {
     public UntilFailureNode(Node child) {

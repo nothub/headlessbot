@@ -1,4 +1,4 @@
-package lol.hub.headlessbot.behaviour;
+package lol.hub.headlessbot.behavior;
 
 public interface Tickable {
     State tick();
