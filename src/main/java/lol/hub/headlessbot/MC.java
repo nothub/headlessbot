@@ -10,6 +10,7 @@ public class MC {
 
     public static synchronized MinecraftClient client() {
         if (mc == null) mc = MinecraftClient.getInstance();
+        if (mc == null) throw new IllegalStateException("client instance is null");
         return mc;
     }
 
