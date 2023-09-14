@@ -1,21 +1,59 @@
 package lol.hub.headlessbot;
 
 import baritone.api.BaritoneAPI;
+import baritone.api.pathing.goals.GoalNear;
+import lol.hub.headlessbot.behavior.BehaviorTree;
+import lol.hub.headlessbot.behavior.nodes.composites.SequenceAllNode;
+import lol.hub.headlessbot.behavior.nodes.decorators.MaybeRunNode;
+import lol.hub.headlessbot.behavior.nodes.leafs.*;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.util.math.BlockPos;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Mod implements ModInitializer, ClientModInitializer {
 
     public static long lastKeepAlive;
     public static long ticksOnline;
-    public Set<Object> modules = new HashSet<>();
+    private BehaviorTree behavior;
+    private Chat chat;
+
+    private BehaviorTree defaultBehavior() {
+        var home = BlockPos.ofFloored(420d, 64d, 420d);
+        return new BehaviorTree(
+
+            // The SequenceAllNode executes children in order,
+            // all in one tick, until a child returns failure.
+            new SequenceAllNode(
+
+                // If the client is not ready yet, McCheckReadyNode
+                // returns FAILURE and stop executing the sequence.
+                new McCheckReadyNode(),
+
+                // McNode is a utility to access the client context.
+                // (ListPlayersNode extends McNode extends LeafNode)
+                new ListPlayersNode(),
+
+                // The MaybeRunNode will only tick the child node if
+                // the provided function returns true. If the function
+                // returns false, it will not tick the child node and
+                // it will return SUCCESS.
+                new MaybeRunNode(
+                    new RespawnNode(),
+                    () -> MC.player().isDead()
+                ),
+
+                // The BaritoneGoalNode will return RUNNING until
+                // arrived near the Goal, then it will return SUCCESS.
+                new BaritoneGoalNode(new GoalNear(home, 32))
+
+            )
+
+        );
+    }
 
     @Override
     public void onInitialize() {
@@ -23,26 +61,13 @@ public class Mod implements ModInitializer, ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        ClientTickEvents.START_CLIENT_TICK.register(client -> {
-
-        });
+        this.behavior = defaultBehavior();
+        this.chat = new Chat();
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (!MC.inGame()) return;
+            if (client.player == null || client.world == null) return;
             ticksOnline++;
-
-            if (MC.player().isDead()) {
-                if (ticksOnline % 20 == 0) {
-                    Log.info("requesting respawn");
-                    MC.player().requestRespawn();
-                }
-                return;
-            }
-
-            for (AbstractClientPlayerEntity player : MC.world().getPlayers()) {
-                if (player.getUuid().equals(MC.player().getUuid())) continue;
-                // Log.info("player in close proximity: %s (%s)", player.getGameProfile().getName(), player.getUuid().toString());
-            }
+            this.behavior.tick();
         });
 
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
@@ -52,7 +77,8 @@ public class Mod implements ModInitializer, ClientModInitializer {
             var serverInfo = netHandler.getServerInfo();
             if (serverInfo == null) return;
 
-            Log.info("client connected to %s (%s)", serverInfo.name, serverInfo.address);
+            Log.info("client connected to %s (%s)", serverInfo.name,
+                serverInfo.address);
 
             configureBaritone();
         });
@@ -71,8 +97,6 @@ public class Mod implements ModInitializer, ClientModInitializer {
                 System.exit(0);
             }
         });
-
-        modules.add(new Chat());
     }
 
     private void configureBaritone() {
@@ -141,7 +165,8 @@ public class Mod implements ModInitializer, ClientModInitializer {
         settings.renderSelectionCorners.value = false;
         settings.desktopNotifications.value = false;
 
-        //settings.acceptableThrowawayItems.value.addAll(BlockGroups.PATHING_BLOCKS.items);
+        //settings.acceptableThrowawayItems.value.addAll(BlockGroups
+        // .PATHING_BLOCKS.items);
 
         Log.info("Baritone initialized with settings:\n" + settings.allSettings.stream().map(s -> "  - " + s.getName() + ": " + s.value).collect(Collectors.joining("\n")));
 
