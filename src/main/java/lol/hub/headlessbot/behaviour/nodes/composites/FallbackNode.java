@@ -7,23 +7,25 @@ import static lol.hub.headlessbot.behaviour.State.*;
 
 /**
  * OR
- * Execute children in order until a child returns success.
+ * Execute children in order, one per tick, until a child returns success.
  */
 public final class FallbackNode extends CompositeNode {
+    private int index = 0;
+
     public FallbackNode(Node... children) {
         super(children);
     }
 
     @Override
-    public State tick() {
-        switch (next().tick()) {
+    public synchronized State tick() {
+        switch (children().get(index++).tick()) {
             case SUCCESS -> {
-                reset();
+                index = 0;
                 return SUCCESS;
             }
             case FAILURE -> {
-                if (isEnd()) {
-                    reset();
+                if (index >= children().size()) {
+                    index = 0;
                     return FAILURE;
                 }
             }
