@@ -16,13 +16,13 @@ Assorted Ideas (to never be completed)
 - [ ] http api for remote control
 - [ ] webhook logs
 
-## Behaviour Tree
+## Behavior Tree
 
 - [ ] Tree walking
 - [ ] Composite nodes
 - [ ] Decorator nodes
 - [ ] Leaf nodes register self
-- [ ] Port [old behaviour](https://github.com/nothub/headlessbot/blob/old/src/main/java/not/hub/headlessbot/fsm/behaviour/Controller.java)
+- [ ] Port [old behavior](https://github.com/nothub/headlessbot/blob/old/src/main/java/not/hub/headlessbot/fsm/behaviour/Controller.java)
 
 ## Modules
 
@@ -62,5 +62,5 @@ Assorted Ideas (to never be completed)
 
 ## Monitoring
 
-- [ ] Dashboard with behaviour tree visualization
+- [ ] Dashboard with behavior tree visualization
 - [ ] Prometheus exporter
