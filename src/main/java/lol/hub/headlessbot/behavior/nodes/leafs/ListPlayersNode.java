@@ -13,7 +13,7 @@ public class ListPlayersNode extends McNode {
         super(mc -> {
             if (Mod.ticksOnline % (20 * 10) == 0) {
                 var players =
-                    MC.world().getPlayers().stream()
+                    mc.world.getPlayers().stream()
                         .filter(p -> !p.getUuid().equals(MC.player().getUuid()))
                         .collect(Collectors.toSet());
                 if (!players.isEmpty()) {
