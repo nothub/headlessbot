@@ -2,7 +2,9 @@ package lol.hub.headlessbot;
 
 import baritone.api.pathing.goals.GoalNear;
 import lol.hub.headlessbot.behavior.BehaviorTree;
+import lol.hub.headlessbot.behavior.nodes.composites.FallbackAllNode;
 import lol.hub.headlessbot.behavior.nodes.composites.SequenceAllNode;
+import lol.hub.headlessbot.behavior.nodes.composites.SequenceOneNode;
 import lol.hub.headlessbot.behavior.nodes.decorators.MaybeRunNode;
 import lol.hub.headlessbot.behavior.nodes.leafs.*;
 import net.fabricmc.api.ClientModInitializer;
@@ -64,7 +66,6 @@ public class Mod implements ModInitializer, ClientModInitializer {
     }
 
     private BehaviorTree defaultBehavior() {
-        var home = BlockPos.ofFloored(420, 64, 420);
         return new BehaviorTree(
 
             // Execute children in order, all in one tick,
@@ -85,12 +86,23 @@ public class Mod implements ModInitializer, ClientModInitializer {
                 // it will return SUCCESS.
                 new MaybeRunNode(new RespawnNode(), () -> MC.player().isDead()),
 
-                // The BaritoneGoalNode will return RUNNING until
-                // arrived near the Goal, then it will return SUCCESS.
-                new BaritoneGoalNode(new GoalNear(home, 32))
+                // While the player is dead, exit the sequence here.
+                new MaybeRunNode(new FailNode(), () -> MC.player().isDead()),
 
+                //  Execute children in order, all in one tick,
+                //  until a child returns RUNNING or SUCCESS.
+                new FallbackAllNode(
+                    // Find a player nearby and path to the player.
+                    new BaritoneGotoClosestPlayerNode(),
+                    // When no player is nearby, run between waypoints.
+                    new SequenceOneNode(
+                        new BaritoneGoalNode(new GoalNear(
+                            BlockPos.ofFloored(32, 64, 0), 8)),
+                        new BaritoneGoalNode(new GoalNear(
+                            BlockPos.ofFloored(-32, 64, 0), 8))
+                    )
+                )
             )
-
         );
     }
 
