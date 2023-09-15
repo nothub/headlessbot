@@ -1,13 +1,7 @@
 package lol.hub.headlessbot.behavior.nodes.leafs;
 
-import lol.hub.headlessbot.Log;
-import lol.hub.headlessbot.MC;
-import lol.hub.headlessbot.Mod;
-import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 
-import static baritone.api.utils.Helper.mc;
-import static lol.hub.headlessbot.behavior.State.RUNNING;
 import static lol.hub.headlessbot.behavior.State.SUCCESS;
 
 public class AutoTotemNode extends McNode {
