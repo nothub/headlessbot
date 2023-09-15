@@ -3,8 +3,6 @@ package lol.hub.headlessbot.behavior.nodes.composites;
 import lol.hub.headlessbot.behavior.State;
 import lol.hub.headlessbot.behavior.nodes.Node;
 
-import java.util.Objects;
-
 import static lol.hub.headlessbot.behavior.State.*;
 
 /**

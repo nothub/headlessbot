@@ -92,8 +92,8 @@ public class Mod implements ModInitializer, ClientModInitializer {
                 //  Execute children in order, all in one tick,
                 //  until a child returns RUNNING or SUCCESS.
                 new FallbackAllNode(
-                    // Find a player nearby and path to the player.
-                    new BaritoneGotoClosestPlayerNode(),
+                    // Find and follow closest player.
+                    new BaritoneFollowClosestPlayerNode(),
                     // When no player is nearby, run between waypoints.
                     new SequenceOneNode(
                         new BaritoneGoalNode(new GoalNear(
