@@ -2,21 +2,22 @@ package lol.hub.headlessbot.behavior.nodes.leafs;
 
 import lol.hub.headlessbot.Log;
 import lol.hub.headlessbot.MC;
-import lol.hub.headlessbot.Mod;
+import lol.hub.headlessbot.race_conditions.Cooldowns;
 
 import static lol.hub.headlessbot.behavior.State.RUNNING;
+import static lol.hub.headlessbot.behavior.State.SUCCESS;
 
 public class RespawnNode extends McNode {
     public RespawnNode() {
         super(mc -> {
-            // We do not want to spam the server,
-            // so we just run this every 20 ticks.
-            if (Mod.ticksOnline % 20 != 0) return RUNNING;
+            if (Cooldowns.respawn.isActive()) {
+                return RUNNING;
+            }
 
-            // Respawn does not happen immediately so we return RUNNING
             Log.info("requesting respawn");
             MC.player().requestRespawn();
-            return RUNNING;
+            Cooldowns.respawn.reset();
+            return SUCCESS;
         });
     }
 }
