@@ -60,4 +60,11 @@ public class ExpiringFlag {
         this.start = Instant.now();
     }
 
+    /**
+     * Expire the flag, setting the start time to the far past.
+     */
+    public void expire() {
+        this.start = Instant.MIN;
+    }
+
 }
