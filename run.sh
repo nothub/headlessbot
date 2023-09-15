@@ -35,23 +35,19 @@ if test ! -e "mc/versions/fabric-loader-0.14.22-1.19.4"; then
     headlessmc fabric "1.19.4"
 fi
 
-mkdir -p mc/mods
-
-# install fabric api
-if test ! -e "mc/mods/fabric-api-0.87.0+1.19.4.jar"; then
-    (
-        cd mc/mods
-        curl -sSLO "https://cdn.modrinth.com/data/P7dR8mSH/versions/LKgVmlZB/fabric-api-0.87.0+1.19.4.jar"
-    )
-fi
-
-# install baritone
-if test ! -e "mc/mods/baritone-api-fabric-1.9.3.jar"; then
-    (
-        cd mc/mods
-        curl -sSLO "https://github.com/cabaletta/baritone/releases/download/v1.9.3/baritone-api-fabric-1.9.3.jar"
-    )
-fi
+# download mods
+mkdir -p "mc/mods"
+mods=$(jq -r '.mods' "../mods.json")
+for mod in $(echo "$mods" | jq -c '.[]'); do
+    file=$(echo "$mod" | jq -r '.file')
+    url=$(echo "$mod" | jq -r '.url')
+    sha256=$(echo "$mod" | jq -r '.sha256')
+    if test ! -e "mc/mods/${file}"; then
+        echo "fetching ${file} from ${url}"
+        curl -sSL -o "mc/mods/${file}" "${url}"
+        echo "${sha256} mc/mods/${file}" | sha256sum -c -
+    fi
+done
 
 # install mod
 cp ../build/libs/*.jar mc/mods/
