@@ -33,7 +33,7 @@ public class BaritoneFollowClosestPlayerNode extends McNode {
             if (Cooldowns.baritone.isActive()) return RUNNING;
             if (Baritone.isBusy()) return RUNNING;
 
-            Log.info("following %s %s", target.getName().getString());
+            Log.info("following %s", target.getName().getString());
             Baritone.get().getFollowProcess()
                 .follow(entity -> entity.getUuid().equals(target.getUuid()));
             Cooldowns.baritone.reset();
