@@ -15,7 +15,14 @@ alias headlessmc="docker run -it --rm -v ${PWD}/mc:/work/.minecraft -v ${PWD}/hm
 
 # msa login
 if test ! -f "hmc/auth/.account.json"; then
-    headlessmc login "${1}" "${2}"
+    if test -f "../auth.json"; then
+        username="$(cat "../auth.json" | jq -r '.username')"
+        password="$(cat "../auth.json" | jq -r '.password')"
+    else
+        username="${1}"
+        password="${2}"
+    fi
+    headlessmc login "${username}" "${password}"
 fi
 
 # download mc

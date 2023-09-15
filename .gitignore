@@ -5,3 +5,5 @@
 /build/
 /libs/
 /run/
+
+/auth.json
