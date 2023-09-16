@@ -26,6 +26,7 @@ public class Mod implements ModInitializer, ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        clientOptions();
         behavior = defaultBehavior();
         chat = new Chat();
 
@@ -63,6 +64,11 @@ public class Mod implements ModInitializer, ClientModInitializer {
                 System.exit(0);
             }
         });
+    }
+
+    private void clientOptions() {
+        MC.client().options.getViewDistance().setValue(4);
+        MC.client().options.getSimulationDistance().setValue(4);
     }
 
     private BehaviorTree defaultBehavior() {
