@@ -78,6 +78,9 @@ remapJar {
     dependsOn shadowJar
     inputFile.set(shadowJar.archiveFile)
     archiveFileName = "${project.mod_name}.jar"
+    doLast {
+        file(shadowJar.archiveFile).delete()
+    }
 }
 
 test {
