@@ -38,8 +38,6 @@ public class Mod implements ModInitializer, ClientModInitializer {
     @Override
     public void onInitializeClient() {
         startWebServer();
-        clientDefaultSettings();
-        Baritone.defaultSettings();
 
         behavior = defaultBehavior();
         chat = new Chat();
@@ -61,6 +59,7 @@ public class Mod implements ModInitializer, ClientModInitializer {
                 serverInfo.name,
                 serverInfo.address);
 
+            clientDefaultSettings();
             Baritone.defaultSettings();
         });
 
