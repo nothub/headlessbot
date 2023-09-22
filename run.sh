@@ -2,21 +2,21 @@
 
 set -eu
 
-headlessmc() {
-    docker run -it --rm \
-        -p "127.0.0.1:8080:8080" \
-        -v "${PWD}/mc:/work/.minecraft" \
-        -v "${PWD}/hmc:/work/HeadlessMC" \
-        "n0thub/headlessmc:latest" \
-        "${@}"
-}
-
 cd "$(realpath "$(dirname "$(readlink -f "$0")")")"
 
 make clean build
 
 mkdir -p run
 cd run
+
+headlessmc() {
+    docker run --rm \
+        -p "127.0.0.1:8080:8080" \
+        -v "${PWD}/mc:/work/.minecraft" \
+        -v "${PWD}/hmc:/work/HeadlessMC" \
+        "n0thub/headlessmc:latest" \
+        "${@}"
+}
 
 # msa login
 if test ! -f "hmc/auth/.account.json"; then
@@ -58,5 +58,6 @@ done
 # install mod
 cp ../build/libs/headlessbot.jar mc/mods/
 
-# run client
-headlessmc launch "fabric-loader-0.14.22-1.19.4"
+# launch bot + monitoring
+cd ..
+docker compose up --abort-on-container-exit --force-recreate -V

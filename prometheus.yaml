@@ -1,0 +1,9 @@
+global:
+  external_labels:
+    monitor: 'lab'
+
+scrape_configs:
+
+  - job_name: 'headlessbot'
+    static_configs:
+      - targets: [ 'headlessbot:8080' ]
