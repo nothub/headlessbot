@@ -2,16 +2,21 @@
 
 set -eu
 
+headlessmc() {
+    docker run -it --rm \
+        -p "127.0.0.1:8080:8080" \
+        -v "${PWD}/mc:/work/.minecraft" \
+        -v "${PWD}/hmc:/work/HeadlessMC" \
+        "n0thub/headlessmc:latest" \
+        "${@}"
+}
+
 cd "$(realpath "$(dirname "$(readlink -f "$0")")")"
 
-# build mod
-./gradlew --console "plain" --info -- build
+make clean build
 
 mkdir -p run
 cd run
-
-# shellcheck disable=SC2139
-alias headlessmc="docker run -it --rm -v ${PWD}/mc:/work/.minecraft -v ${PWD}/hmc:/work/HeadlessMC n0thub/headlessmc:latest"
 
 # msa login
 if test ! -f "hmc/auth/.account.json"; then
@@ -22,6 +27,7 @@ if test ! -f "hmc/auth/.account.json"; then
         username="${1}"
         password="${2}"
     fi
+    # TODO: stop passing sensitive data as command arguments
     headlessmc login "${username}" "${password}"
 fi
 
@@ -50,7 +56,7 @@ for mod in $(echo "$mods" | jq -c '.[]'); do
 done
 
 # install mod
-cp ../build/libs/*.jar mc/mods/
+cp ../build/libs/headlessbot.jar mc/mods/
 
 # run client
 headlessmc launch "fabric-loader-0.14.22-1.19.4"
