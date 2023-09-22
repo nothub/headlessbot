@@ -5,10 +5,10 @@ Assorted Ideas (to never be completed)
 ## General / Misc
 
 - [X] test disconnect/kick
-- [ ] expiring flags
-- [ ] global cooldowns
+- [X] expiring flags
+- [X] global cooldowns
 - [ ] inventory utils
-- [ ] block groups
+- [ ] more block groups
 - [ ] baritone settings
 - [ ] permission groups (admin commands)
 - [ ] player standing (friend/foe) system
@@ -18,15 +18,14 @@ Assorted Ideas (to never be completed)
 
 ## Behavior Tree
 
-- [ ] Tree walking
-- [ ] Composite nodes
-- [ ] Decorator nodes
-- [ ] Leaf nodes register self
+- [X] Tree walking
+- [X] Composite nodes
+- [X] Decorator nodes
 - [ ] Port [old behavior](https://github.com/nothub/headlessbot/blob/old/src/main/java/not/hub/headlessbot/fsm/behaviour/Controller.java)
 
 ## Modules
 
-- [ ] module system
+- [ ] module system for non-tick based reactive logic
 - [ ] [AutoArmor](https://github.com/nothub/headlessbot/blob/old/src/main/java/not/hub/headlessbot/modules/AutoArmorModule.java)
 - [ ] [AutoTotem](https://github.com/nothub/headlessbot/blob/old/src/main/java/not/hub/headlessbot/modules/AutoTotemModule.java)
 - [ ] Autoeat
@@ -63,4 +62,4 @@ Assorted Ideas (to never be completed)
 ## Monitoring
 
 - [ ] Dashboard with behavior tree visualization
-- [ ] Prometheus exporter
+- [X] Prometheus exporter
