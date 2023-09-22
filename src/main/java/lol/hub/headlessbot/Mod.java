@@ -1,6 +1,9 @@
 package lol.hub.headlessbot;
 
 import baritone.api.pathing.goals.GoalNear;
+import com.sun.net.httpserver.HttpServer;
+import io.prometheus.client.exporter.HTTPServer;
+import io.prometheus.client.hotspot.DefaultExports;
 import lol.hub.headlessbot.behavior.BehaviorTree;
 import lol.hub.headlessbot.behavior.nodes.composites.FallbackAllNode;
 import lol.hub.headlessbot.behavior.nodes.composites.SequenceAllNode;
@@ -13,10 +16,18 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.util.math.BlockPos;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
 public class Mod implements ModInitializer, ClientModInitializer {
 
     public static long lastKeepAlive;
     public static long ticksOnline;
+
     private BehaviorTree behavior;
     private Chat chat;
 
@@ -26,7 +37,10 @@ public class Mod implements ModInitializer, ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        clientOptions();
+        startWebServer();
+        clientDefaultSettings();
+        Baritone.defaultSettings();
+
         behavior = defaultBehavior();
         chat = new Chat();
 
@@ -66,7 +80,24 @@ public class Mod implements ModInitializer, ClientModInitializer {
         });
     }
 
-    private void clientOptions() {
+    private void startWebServer() {
+        try {
+            var server = webServer();
+
+            // register web ui
+            // TODO
+
+            // register metrics exporter
+            new HTTPServer.Builder().withHttpServer(server).build();
+
+        } catch (IOException ex) {
+            // when the mod did not load properly,
+            // there is no need for graceful shutdown 🙈
+            throw new IllegalStateException(ex.getMessage());
+        }
+    }
+
+    private void clientDefaultSettings() {
         MC.client().options.getViewDistance().setValue(4);
         MC.client().options.getSimulationDistance().setValue(4);
     }
@@ -110,6 +141,33 @@ public class Mod implements ModInitializer, ClientModInitializer {
                 )
             )
         );
+    }
+
+    private HttpServer webServer() throws IOException {
+        DefaultExports.initialize();
+
+        HttpServer server = HttpServer.create();
+        server.bind(new InetSocketAddress(8080), -1);
+
+        server.setExecutor(new ThreadPoolExecutor(
+            1,
+            3,
+            5,
+            TimeUnit.MINUTES,
+            new SynchronousQueue<>()
+        ));
+
+        server.createContext("/", exchange -> {
+            String response = "Hello, World!";
+            exchange.sendResponseHeaders(200, response.length());
+            OutputStream os = exchange.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        });
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> server.stop(1)));
+
+        return server;
     }
 
 }
