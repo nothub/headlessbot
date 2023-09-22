@@ -1,9 +1,12 @@
 package lol.hub.headlessbot.mixins;
 
+import lol.hub.headlessbot.MC;
+import lol.hub.headlessbot.Metrics;
 import lol.hub.headlessbot.Mod;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.listener.PacketListener;
 import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.s2c.play.DeathMessageS2CPacket;
 import net.minecraft.network.packet.s2c.play.KeepAliveS2CPacket;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,10 +22,17 @@ public abstract class ClientConnectionMixin {
         if (packet instanceof KeepAliveS2CPacket p) {
             Mod.lastKeepAlive = System.currentTimeMillis();
         }
+
+        if (packet instanceof DeathMessageS2CPacket p) {
+            if (MC.inGame() && MC.player().getId() == p.getEntityId()) {
+                Metrics.deaths.inc();
+            }
+        }
     }
 
     // outgoing packets
-    @Inject(method = "send(Lnet/minecraft/network/packet/Packet;)V", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "send(Lnet/minecraft/network/packet/Packet;)V", at =
+    @At("HEAD"), cancellable = true)
     private void onSendPacketHead(Packet<?> packet, CallbackInfo ci) {
 
     }

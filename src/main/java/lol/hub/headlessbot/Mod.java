@@ -2,8 +2,7 @@ package lol.hub.headlessbot;
 
 import baritone.api.pathing.goals.GoalNear;
 import com.sun.net.httpserver.HttpServer;
-import io.prometheus.client.exporter.HTTPServer;
-import io.prometheus.client.hotspot.DefaultExports;
+import io.prometheus.client.Counter;
 import lol.hub.headlessbot.behavior.BehaviorTree;
 import lol.hub.headlessbot.behavior.nodes.composites.FallbackAllNode;
 import lol.hub.headlessbot.behavior.nodes.composites.SequenceAllNode;
@@ -25,9 +24,14 @@ import java.util.concurrent.TimeUnit;
 
 public class Mod implements ModInitializer, ClientModInitializer {
 
+    // metrics examples
+    static final Counter requests = Counter.build()
+        .name("my_library_requests_total")
+        .help("Total requests.")
+        .labelNames("path")
+        .register();
     public static long lastKeepAlive;
     public static long ticksOnline;
-
     private BehaviorTree behavior;
     private Chat chat;
 
@@ -37,10 +41,18 @@ public class Mod implements ModInitializer, ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        startWebServer();
-
         behavior = defaultBehavior();
         chat = new Chat();
+
+        try {
+            var server = webServer();
+            Metrics.init(server);
+            // TODO: web ui
+        } catch (IOException ex) {
+            // when the mod did not load properly,
+            // there is no need for graceful shutdown 🙈
+            throw new IllegalStateException(ex.getMessage());
+        }
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (client.player == null || client.world == null) return;
@@ -77,28 +89,6 @@ public class Mod implements ModInitializer, ClientModInitializer {
                 System.exit(0);
             }
         });
-    }
-
-    private void startWebServer() {
-        try {
-            var server = webServer();
-
-            // register web ui
-            // TODO
-
-            // register metrics exporter
-            new HTTPServer.Builder().withHttpServer(server).build();
-
-        } catch (IOException ex) {
-            // when the mod did not load properly,
-            // there is no need for graceful shutdown 🙈
-            throw new IllegalStateException(ex.getMessage());
-        }
-    }
-
-    private void clientDefaultSettings() {
-        MC.client().options.getViewDistance().setValue(4);
-        MC.client().options.getSimulationDistance().setValue(4);
     }
 
     private BehaviorTree defaultBehavior() {
@@ -143,15 +133,11 @@ public class Mod implements ModInitializer, ClientModInitializer {
     }
 
     private HttpServer webServer() throws IOException {
-        DefaultExports.initialize();
-
         HttpServer server = HttpServer.create();
         server.bind(new InetSocketAddress(8080), -1);
 
         server.setExecutor(new ThreadPoolExecutor(
-            1,
-            3,
-            5,
+            1, 3, 5,
             TimeUnit.MINUTES,
             new SynchronousQueue<>()
         ));
@@ -167,6 +153,11 @@ public class Mod implements ModInitializer, ClientModInitializer {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> server.stop(1)));
 
         return server;
+    }
+
+    private void clientDefaultSettings() {
+        MC.client().options.getViewDistance().setValue(4);
+        MC.client().options.getSimulationDistance().setValue(4);
     }
 
 }
