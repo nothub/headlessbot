@@ -1,5 +1,6 @@
 plugins {
     id 'fabric-loom' version '1.2-SNAPSHOT'
+    id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
 group = project.maven_group
@@ -24,6 +25,12 @@ def urlFile = { url, name, version ->
     return [name: name, version: version]
 }
 
+configurations {
+    // include libraries
+    implementation.extendsFrom(library)
+    shadow.extendsFrom(library)
+}
+
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
@@ -33,15 +40,10 @@ dependencies {
 
     modImplementation urlFile("https://github.com/cabaletta/baritone/releases/download/v${project.baritone_version}/baritone-api-fabric-${project.baritone_version}.jar", "baritone", "${project.minecraft_version}-${project.baritone_version}")
 
-    // TODO: make this work
-    modImplementation 'io.prometheus:simpleclient:0.16.0'
-    include           'io.prometheus:simpleclient:0.16.0'
-    modImplementation 'io.prometheus:simpleclient_hotspot:0.16.0'
-    include           'io.prometheus:simpleclient_hotspot:0.16.0'
-    modImplementation 'io.prometheus:simpleclient_httpserver:0.16.0'
-    include           'io.prometheus:simpleclient_httpserver:0.16.0'
-    modImplementation 'io.prometheus:simpleclient_jetty:0.16.0'
-    include           'io.prometheus:simpleclient_jetty:0.16.0'
+    library 'io.prometheus:simpleclient:0.16.0'
+    library 'io.prometheus:simpleclient_hotspot:0.16.0'
+    library 'io.prometheus:simpleclient_httpserver:0.16.0'
+    library 'io.prometheus:simpleclient_jetty:0.16.0'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
@@ -66,7 +68,15 @@ processResources {
     }
 }
 
+shadowJar {
+    configurations = [project.configurations.shadow]
+    archiveClassifier.set('shadow')
+    archiveVersion.set('')
+}
+
 remapJar {
+    dependsOn shadowJar
+    inputFile.set(shadowJar.archiveFile)
     archiveFileName = "${project.mod_name}.jar"
 }
 
