@@ -1,6 +1,5 @@
 plugins {
     id 'fabric-loom' version '1.2-SNAPSHOT'
-    id 'maven-publish'
 }
 
 group = project.maven_group
@@ -33,6 +32,16 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
     modImplementation urlFile("https://github.com/cabaletta/baritone/releases/download/v${project.baritone_version}/baritone-api-fabric-${project.baritone_version}.jar", "baritone", "${project.minecraft_version}-${project.baritone_version}")
+
+    // TODO: make this work
+    modImplementation 'io.prometheus:simpleclient:0.16.0'
+    include           'io.prometheus:simpleclient:0.16.0'
+    modImplementation 'io.prometheus:simpleclient_hotspot:0.16.0'
+    include           'io.prometheus:simpleclient_hotspot:0.16.0'
+    modImplementation 'io.prometheus:simpleclient_httpserver:0.16.0'
+    include           'io.prometheus:simpleclient_httpserver:0.16.0'
+    modImplementation 'io.prometheus:simpleclient_jetty:0.16.0'
+    include           'io.prometheus:simpleclient_jetty:0.16.0'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
