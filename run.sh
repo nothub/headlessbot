@@ -4,7 +4,7 @@ set -eu
 
 cd "$(realpath "$(dirname "$(readlink -f "$0")")")"
 
-make clean build
+./gradlew --console plain --info --full-stacktrace clean check build
 
 mkdir -p run
 cd run

@@ -6,19 +6,15 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
 
-      - name: 'checkout'
-        uses: actions/checkout@v4.0.0
+      - uses: actions/checkout@v4
 
-      - name: 'validate gradle wrapper'
-        uses: gradle/wrapper-validation-action@v1
+      - uses: gradle/wrapper-validation-action@v1
 
-      - name: 'setup java'
-        uses: actions/setup-java@v3
+      - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
           java-version: '17'
           cache: 'gradle'
 
-      - name: 'run checks'
-        run: |
-          make check
+      - run: |
+          ./gradlew --console plain --info --full-stacktrace clean check
