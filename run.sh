@@ -32,20 +32,20 @@ if test ! -f "hmc/auth/.account.json"; then
 fi
 
 # download mc
-if test ! -e "mc/versions/1.19.4"; then
-    headlessmc download "1.19.4"
+if test ! -e "mc/versions/1.20.4"; then
+    headlessmc download "1.20.4"
 fi
 
 # download fabric
-if test ! -e "mc/versions/fabric-loader-0.14.22-1.19.4"; then
-    headlessmc fabric "1.19.4"
+if test ! -e "mc/versions/fabric-loader-0.15.6-1.20.4"; then
+    headlessmc fabric "1.20.4"
 fi
 
 # download mods
 mkdir -p "mc/mods"
 mods=$(jq -r '.mods' "../mods.json")
 for mod in $(echo "$mods" | jq -c '.[]'); do
-    file=$(echo "$mod" | jq -r '.file')
+    file=$(basename "$(echo "$mod" | jq -r '.url')")
     url=$(echo "$mod" | jq -r '.url')
     sha256=$(echo "$mod" | jq -r '.sha256')
     if test ! -e "mc/mods/${file}"; then
@@ -55,7 +55,7 @@ for mod in $(echo "$mods" | jq -c '.[]'); do
     fi
 done
 
-# install mod
+# install our mod
 cp ../build/libs/headlessbot.jar mc/mods/
 
 # launch bot + monitoring

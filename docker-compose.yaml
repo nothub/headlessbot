@@ -3,9 +3,9 @@ version: '3'
 services:
 
   headlessbot:
-    image: n0thub/headlessmc:latest
+    image: n0thub/headlessmc:1.8.1
     container_name: 'headlessbot'
-    command: launch "fabric-loader-0.14.22-1.19.4"
+    command: launch "fabric-loader-0.15.6-1.20.4"
     ports:
       - '127.0.0.1:8080:8080'
     volumes:
