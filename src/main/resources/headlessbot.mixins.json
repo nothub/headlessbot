@@ -6,7 +6,8 @@
   "mixins": [
   ],
   "client": [
-    "ClientConnectionMixin"
+    "ClientConnectionMixin",
+    "MultiplayerScreenInvoker"
   ],
   "injectors": {
     "defaultRequire": 1

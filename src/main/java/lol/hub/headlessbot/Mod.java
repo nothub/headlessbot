@@ -9,10 +9,17 @@ import lol.hub.headlessbot.behavior.nodes.composites.SequenceAllNode;
 import lol.hub.headlessbot.behavior.nodes.composites.SequenceOneNode;
 import lol.hub.headlessbot.behavior.nodes.decorators.MaybeRunNode;
 import lol.hub.headlessbot.behavior.nodes.leafs.*;
+import lol.hub.headlessbot.mixins.MultiplayerScreenInvoker;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
+import net.minecraft.client.gui.screen.AccessibilityOnboardingScreen;
+import net.minecraft.client.gui.screen.TitleScreen;
+import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
+import net.minecraft.client.gui.screen.multiplayer.MultiplayerWarningScreen;
+import net.minecraft.client.network.ServerInfo;
 import net.minecraft.util.math.BlockPos;
 
 import java.io.IOException;
@@ -53,6 +60,23 @@ public class Mod implements ModInitializer, ClientModInitializer {
             // there is no need for graceful shutdown 🙈
             throw new IllegalStateException(ex.getMessage());
         }
+
+        ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
+            if (screen instanceof AccessibilityOnboardingScreen) {
+                screen.close();
+            } else if (screen instanceof MultiplayerWarningScreen) {
+                screen.close();
+            } else if (screen instanceof TitleScreen titleScreen) {
+                Log.info("client is in main menu and ready");
+                var multiplayerScreen = new MultiplayerScreen(titleScreen);
+                ((MultiplayerScreenInvoker) multiplayerScreen)
+                    .invokeConnect(new ServerInfo(
+                        "docker host",
+                        "172.17.0.1",
+                        ServerInfo.ServerType.OTHER
+                    ));
+            }
+        });
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (client.player == null || client.world == null) return;
@@ -158,6 +182,7 @@ public class Mod implements ModInitializer, ClientModInitializer {
     private void clientDefaultSettings() {
         MC.client().options.getViewDistance().setValue(4);
         MC.client().options.getSimulationDistance().setValue(4);
+        MC.client().options.skipMultiplayerWarning = true;
     }
 
 }
