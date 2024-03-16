@@ -4,6 +4,15 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
+headlessmc() {
+    docker run --rm \
+        -p "127.0.0.1:8080:8080" \
+        -v "${PWD}/mc:/work/.minecraft" \
+        -v "${PWD}/hmc:/work/HeadlessMC" \
+        "n0thub/headlessmc:1.9.0" \
+        "${@}"
+}
+
 # workdir is repository root
 cd "$(dirname "$(realpath "$0")")/.."
 
@@ -11,15 +20,6 @@ cd "$(dirname "$(realpath "$0")")/.."
 
 mkdir -p run
 cd run
-
-headlessmc() {
-    docker run --rm \
-        -p "127.0.0.1:8080:8080" \
-        -v "${PWD}/mc:/work/.minecraft" \
-        -v "${PWD}/hmc:/work/HeadlessMC" \
-        "n0thub/headlessmc:latest" \
-        "${@}"
-}
 
 # msa login
 if test ! -f "hmc/auth/.account.json"; then
