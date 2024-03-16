@@ -1,8 +1,11 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
-set -eu
+set -o errexit
+set -o nounset
+set -o pipefail
 
-cd "$(realpath "$(dirname "$(readlink -f "$0")")")"
+# workdir is repository root
+cd "$(dirname "$(realpath "$0")")/.."
 
 ./gradlew --console plain --info --full-stacktrace clean check build
 
