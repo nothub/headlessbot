@@ -9,7 +9,5 @@ cd "$(dirname "$(realpath "$0")")/.."
 
 set -x
 
-rm -rf .gradle
 rm -rf build
 rm -rf run
-rm -rf libs
