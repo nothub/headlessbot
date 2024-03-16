@@ -40,7 +40,7 @@ if test ! -e "mc/versions/1.20.4"; then
 fi
 
 # download fabric
-if test ! -e "mc/versions/fabric-loader-0.15.6-1.20.4"; then
+if test ! -e "mc/versions/fabric-loader-0.15.7-1.20.4"; then
     headlessmc fabric "1.20.4"
 fi
 
