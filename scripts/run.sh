@@ -9,7 +9,7 @@ headlessmc() {
         -p "127.0.0.1:8080:8080" \
         -v "${PWD}/mc:/work/.minecraft" \
         -v "${PWD}/hmc:/work/HeadlessMC" \
-        "n0thub/headlessmc:1.9.0" \
+        "n0thub/headlessmc:1.9.1" \
         "${@}"
 }
 
