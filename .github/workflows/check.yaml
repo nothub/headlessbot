@@ -1,19 +1,21 @@
 name: '🚔'
-on: [ push ]
+on: [ push, pull_request ]
 jobs:
   check:
     runs-on: ubuntu-22.04
     steps:
-
       - uses: actions/checkout@v4
-
+        with:
+          fetch-depth: 0
       - uses: gradle/wrapper-validation-action@v2
-
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
           cache: 'gradle'
-
-      - run: |
-          ./gradlew --console plain --info --full-stacktrace clean check
+      - run: >
+          ./gradlew
+          --console=plain
+          --info
+          --full-stacktrace
+          clean check
