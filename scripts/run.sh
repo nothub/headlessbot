@@ -4,20 +4,27 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-headlessmc() {
-    docker run --rm \
+hmc() {
+    docker run -it --rm \
         -p "127.0.0.1:8080:8080" \
         -v "${PWD}/mc:/work/.minecraft" \
         -v "${PWD}/hmc:/work/HeadlessMC" \
-        "n0thub/headlessmc:1.9.1" \
+        "n0thub/headlessmc:${hmc_version}" \
         "${@}"
 }
 
-# workdir is repository root
+prop() {
+    cat gradle.properties \
+        | grep -E -m 1 "${1}"'\s*=' \
+        | sed -E 's/^\w+\s*=\s*//'
+}
+
+hmc_version="$(prop 'headlessmc_version')"
+mc_version="$(prop 'minecraft_version')"
+fabric_version="$(prop 'fabric_loader_version')"
+
+# workdir
 cd "$(dirname "$(realpath "$0")")/.."
-
-./gradlew --console plain --info --full-stacktrace clean check build
-
 mkdir -p run
 cd run
 
@@ -31,17 +38,17 @@ if test ! -f "hmc/auth/.account.json"; then
         password="${2}"
     fi
     # TODO: stop passing sensitive data as command arguments
-    headlessmc login "${username}" "${password}"
+    hmc login "${username}" "${password}"
 fi
 
 # download mc
-if test ! -e "mc/versions/1.20.4"; then
-    headlessmc download "1.20.4"
+if test ! -e "mc/versions/${mc_version}"; then
+    hmc download "${mc_version}"
 fi
 
 # download fabric
-if test ! -e "mc/versions/fabric-loader-0.15.7-1.20.4"; then
-    headlessmc fabric "1.20.4"
+if test ! -e "mc/versions/fabric-loader-${fabric_version}-${mc_version}"; then
+    hmc fabric "${mc_version}"
 fi
 
 # download mods
@@ -58,9 +65,21 @@ for mod in $(echo "$mods" | jq -c '.[]'); do
     fi
 done
 
-# install our mod
-cp ../build/libs/headlessbot.jar mc/mods/
+(
+    cd ..
+
+    # build our mod
+    ./gradlew --console plain --info --full-stacktrace clean check build
+
+    # install our mod
+    cp ./build/libs/headlessbot.jar run/mc/mods/
+)
+
+# find fabric profile
+profile="$(hmc versions | grep -E '\s+fabric-loader-' | awk 'NR==1{print $2}')"
+
+# launch bot
+hmc launch "${profile}"
 
 # launch bot + monitoring
-cd ..
-docker compose up --abort-on-container-exit --force-recreate -V
+#docker compose up --abort-on-container-exit --force-recreate -V
