@@ -14,8 +14,8 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
-import net.minecraft.client.gui.screen.AccessibilityOnboardingScreen;
-import net.minecraft.client.gui.screen.TitleScreen;
+import net.minecraft.client.gui.screen.*;
+import net.minecraft.client.gui.screen.multiplayer.ConnectScreen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerWarningScreen;
 import net.minecraft.util.math.BlockPos;
 
@@ -59,14 +59,24 @@ public class Mod implements ModInitializer, ClientModInitializer {
         }
 
         ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
-            if (screen instanceof AccessibilityOnboardingScreen) {
+            if (screen instanceof AccessibilityOnboardingScreen sc) {
                 Log.info("Closing AccessibilityOnboardingScreen");
                 screen.close();
-            } else if (screen instanceof MultiplayerWarningScreen) {
+            } else if (screen instanceof MultiplayerWarningScreen sc) {
                 Log.info("Closing MultiplayerWarningScreen");
                 screen.close();
+            } else if (screen instanceof ConnectScreen) {
+                Log.info("Connecting ...");
+            } else if (screen instanceof DisconnectedScreen) {
+                Log.info("Disconnecting ...");
+            } else if (screen instanceof DownloadingTerrainScreen) {
+                Log.info("Downloading terrain ...");
+            } else if (screen instanceof ProgressScreen) {
+                Log.info("Awaiting progress ...");
+            } else if (screen instanceof MessageScreen sc) {
+                Log.info("Showing mssage: %s", sc.getTitle().getString());
             } else {
-                Log.info("Client is in screen: %s", screen.getClass().getSimpleName());
+                Log.info("Showing screen: %s", screen.getClass().getSimpleName());
             }
         });
 
