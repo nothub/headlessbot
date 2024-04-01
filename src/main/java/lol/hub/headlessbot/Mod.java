@@ -13,6 +13,10 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
+import net.minecraft.client.gui.screen.AccessibilityOnboardingScreen;
+import net.minecraft.client.gui.screen.TitleScreen;
+import net.minecraft.client.gui.screen.multiplayer.MultiplayerWarningScreen;
 import net.minecraft.util.math.BlockPos;
 
 import java.io.IOException;
@@ -53,6 +57,18 @@ public class Mod implements ModInitializer, ClientModInitializer {
             // there is no need for graceful shutdown 🙈
             throw new IllegalStateException(ex.getMessage());
         }
+
+        ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
+            if (screen instanceof AccessibilityOnboardingScreen) {
+                Log.info("Closing AccessibilityOnboardingScreen");
+                screen.close();
+            } else if (screen instanceof MultiplayerWarningScreen) {
+                Log.info("Closing MultiplayerWarningScreen");
+                screen.close();
+            } else if (screen instanceof TitleScreen) {
+                Log.info("Client is in TitleScreen");
+            }
+        });
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (client.player == null || client.world == null) return;
