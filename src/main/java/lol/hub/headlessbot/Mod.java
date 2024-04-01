@@ -65,8 +65,8 @@ public class Mod implements ModInitializer, ClientModInitializer {
             } else if (screen instanceof MultiplayerWarningScreen) {
                 Log.info("Closing MultiplayerWarningScreen");
                 screen.close();
-            } else if (screen instanceof TitleScreen) {
-                Log.info("Client is in TitleScreen");
+            } else {
+                Log.info("Client is in screen: %s", screen.getClass().getSimpleName());
             }
         });
 
