@@ -5,6 +5,10 @@ and [cabaletta/baritone](https://github.com/cabaletta/baritone).
 
 ---
 
+## Behavior
+
+The bots behavior is represented as [behavior tree](https://en.wikipedia.org/wiki/Behavior_tree).
+
 ## TODO
 
 (Assorted Ideas)
