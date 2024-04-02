@@ -2,16 +2,6 @@ version: '3'
 
 services:
 
-  headlessbot:
-    image: n0thub/headlessmc:1.9.1
-    container_name: 'headlessbot'
-    command: launch "fabric-loader-0.15.7-1.20.4"
-    ports:
-      - '127.0.0.1:8080:8080'
-    volumes:
-      - '${PWD}/run/mc:/work/.minecraft'
-      - '${PWD}/run/hmc:/work/HeadlessMC'
-
   grafana:
     image: grafana/grafana:latest
     container_name: 'grafana'
