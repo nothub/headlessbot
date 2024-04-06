@@ -59,22 +59,23 @@ public class Mod implements ModInitializer, ClientModInitializer {
         }
 
         ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
-            if (screen instanceof AccessibilityOnboardingScreen sc) {
+            if (screen instanceof AccessibilityOnboardingScreen) {
                 Log.info("Closing AccessibilityOnboardingScreen");
                 screen.close();
-            } else if (screen instanceof MultiplayerWarningScreen sc) {
+            } else if (screen instanceof MultiplayerWarningScreen) {
                 Log.info("Closing MultiplayerWarningScreen");
                 screen.close();
             } else if (screen instanceof ConnectScreen) {
                 Log.info("Connecting ...");
             } else if (screen instanceof DisconnectedScreen) {
-                Log.info("Disconnecting ...");
+                Log.info("Disconnected, shutting down ...");
+                System.exit(0);
             } else if (screen instanceof DownloadingTerrainScreen) {
                 Log.info("Downloading terrain ...");
             } else if (screen instanceof ProgressScreen) {
                 Log.info("Awaiting progress ...");
-            } else if (screen instanceof MessageScreen sc) {
-                Log.info("Showing mssage: %s", sc.getTitle().getString());
+            } else if (screen instanceof MessageScreen) {
+                Log.info("Showing mssage: %s", screen.getTitle().getString());
             } else {
                 Log.info("Showing screen: %s", screen.getClass().getSimpleName());
             }
