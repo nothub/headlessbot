@@ -5,6 +5,10 @@ and [cabaletta/baritone](https://github.com/cabaletta/baritone).
 
 ---
 
+## Usage
+
+Run `./scripts/run.sh` to start the bot in a Docker container.
+
 ## Behavior
 
 The bots behavior is represented as [behavior tree](https://en.wikipedia.org/wiki/Behavior_tree).
