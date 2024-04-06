@@ -23,6 +23,7 @@ The bots behavior is represented as [behavior tree](https://en.wikipedia.org/wik
 - [X] expiring flags
 - [X] global cooldowns
 - [ ] inventory utils
+- [ ] port [old player utils](https://github.com/nothub/headlessbot/blob/old/src/main/java/not/hub/headlessbot/util/PlayerStuff.java)
 - [ ] more block groups
 - [ ] baritone settings
 - [ ] permission groups (admin commands)
@@ -36,9 +37,15 @@ The bots behavior is represented as [behavior tree](https://en.wikipedia.org/wik
 - [X] Tree walking
 - [X] Composite nodes
 - [X] Decorator nodes
-- [ ] WebUI tree editor
-- [ ] WebUI tree manager
 - [ ] Port [old behavior](https://github.com/nothub/headlessbot/blob/old/src/main/java/not/hub/headlessbot/fsm/behaviour/Controller.java)
+- [ ] WebUI
+  - [ ] tree viewer
+  - [ ] tree editor
+  - [ ] tree manager
+
+### Monitoring
+
+- [X] Prometheus exporter
 
 ### Modules
 
@@ -75,8 +82,3 @@ The bots behavior is represented as [behavior tree](https://en.wikipedia.org/wik
 - [ ] names (get old names of player)
 - [ ] search (get infos from ddg/google/etc.)
 - [ ] yt (search videos)
-
-### Monitoring
-
-- [ ] Dashboard with behavior tree visualization
-- [X] Prometheus exporter

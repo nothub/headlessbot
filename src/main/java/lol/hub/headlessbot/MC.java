@@ -27,6 +27,4 @@ public class MC {
         return player() != null && world() != null;
     }
 
-    // TODO: port https://github.com/nothub/headlessbot/blob/old/src/main/java/not/hub/headlessbot/util/PlayerStuff.java
-
 }
