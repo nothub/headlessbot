@@ -75,11 +75,5 @@ done
     cp ./build/libs/headlessbot.jar run/mc/mods/
 )
 
-# find fabric profile
-profile="$(hmc versions | grep -E '\s+fabric-loader-' | awk 'NR==1{print $2}')"
-
 # launch bot
-hmc launch "${profile}"
-
-# launch bot + monitoring
-#docker compose up --abort-on-container-exit --force-recreate -V
+hmc "launch 1 -id"
