@@ -47,7 +47,7 @@ if test ! -e "mc/versions/${mc_version}"; then
 fi
 
 # download fabric
-if test ! -e "mc/versions/fabric-loader-${fabric_version}-${mc_version}"; then
+if test -z "$(find './mc/versions/' -maxdepth 1 -name 'fabric-loader-*-1.20.4' -print)"; then
     hmc fabric "${mc_version}"
 fi
 
