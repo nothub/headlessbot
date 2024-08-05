@@ -4,12 +4,16 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
+prop() {
+    cat gradle.properties \
+        | grep -E -m 1 "${1}"'\s*=' \
+        | sed -E 's/^\w+\s*=\s*//'
+}
+
 # workdir is repository root
 cd "$(dirname "$(realpath "$0")")/.."
 
-mc_version="$(cat gradle.properties \
-    | grep -E -m 1 "minecraft_version"'\s*=' \
-    | sed -E 's/^\w+\s*=\s*//')"
+mc_version="$(prop 'minecraft_version')"
 
 mkdir -p run/server
 cd run/server
