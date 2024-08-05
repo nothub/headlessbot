@@ -1,4 +1,4 @@
-# headlessbot
+# headlessbot ![logo](src/main/resources/assets/headlessbot/icon.png)
 
 A headless Minecraft bot built with [3arthqu4ke/HeadlessMc](https://github.com/3arthqu4ke/HeadlessMc)
 and [cabaletta/baritone](https://github.com/cabaletta/baritone).
