@@ -30,14 +30,18 @@ cd run
 
 # msa login
 if test ! -f "hmc/auth/.account.json"; then
-    if test -f "../auth.json"; then
-        username="$(cat "../auth.json" | jq -r '.username')"
-        password="$(cat "../auth.json" | jq -r '.password')"
-    else
-        username="${1}"
-        password="${2}"
+    if test ! -f "../auth.json"; then
+        set +o nounset
+        if test -z "${1}" || test -z "${2}"; then
+            echo "Usage: ${0} [<username> <password>]" >&2
+            echo "Create auth.json or supply username and password arguments." >&2
+            exit 1
+        fi
+        set -o nounset
+        jq ".username = \"${1}\" | .password = \"${2}\"" ../auth.example.json > ../auth.json
     fi
-    # TODO: stop passing sensitive data as command arguments
+    username="$(cat "../auth.json" | jq -r '.username')"
+    password="$(cat "../auth.json" | jq -r '.password')"
     hmc login "${username}" "${password}"
 fi
 
