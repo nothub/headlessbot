@@ -1,5 +1,4 @@
-/**/.idea/
-/**/.vscode/
+/devbox.lock
 
 /.gradle/
 /build/

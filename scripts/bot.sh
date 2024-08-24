@@ -73,7 +73,7 @@ done
     cd ..
 
     # build our mod
-    ./gradlew --console plain --info --full-stacktrace clean check build
+    ./gradlew --console=plain --info --full-stacktrace clean check build
 
     # install our mod
     cp ./build/libs/headlessbot.jar run/mc/mods/
