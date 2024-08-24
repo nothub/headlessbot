@@ -1,0 +1,21 @@
+name: '🧑‍🏭'
+on: [ push ]
+permissions:
+  contents: write
+jobs:
+  ci:
+    runs-on: ubuntu-22.04
+    steps:
+
+      - name: 'Checkout repo'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 'Install devbox'
+        uses: jetify-com/devbox-install-action@v0.11.0
+        with:
+          enable-cache: true
+
+      - name: 'Run tests'
+        run: devbox run test

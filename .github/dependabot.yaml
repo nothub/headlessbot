@@ -5,20 +5,12 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-    target-branch: "main"
     assignees:
       - "nothub"
-    commit-message:
-      prefix: "gradle"
-      include: "scope"
 
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "daily"
-    target-branch: "main"
     assignees:
       - "nothub"
-    commit-message:
-      prefix: "github-actions"
-      include: "scope"
