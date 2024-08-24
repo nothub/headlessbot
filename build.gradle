@@ -14,7 +14,7 @@ repositories {
 }
 
 def urlFile = { url, name, version ->
-    File file = new File("$rootDir/libs/${name}-${version}.jar")
+    File file = new File("${rootDir}/libs/${name}-${version}.jar")
     file.parentFile.mkdirs()
     if (!file.exists()) {
         new URL(url).withInputStream { downloadStream ->
@@ -85,4 +85,8 @@ remapJar {
 
 test {
     useJUnitPlatform()
+}
+
+clean.doLast {
+    delete "${rootDir}/run/"
 }
