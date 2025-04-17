@@ -71,6 +71,8 @@ dlmod 'mc/mods/baritone-api-fabric.jar' \
 # launch bot
 docker run -it --rm \
     --name "headlessbot" \
+    -e "ADDR=${MCADDR:-"172.17.0.1"}" \
+    -e "PORT=${MCPORT:-"25565"}" \
     -p "127.0.0.1:8080:8080" \
     -v "${PWD}/mc:/work/.minecraft" \
     -v "${PWD}/hmc:/work/HeadlessMC" \

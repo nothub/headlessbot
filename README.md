@@ -14,6 +14,16 @@ for execution and development are managed with [Devbox](https://github.com/jetif
 
 Execute `devbox run bot` to start the bot.
 
+### Connection target
+
+Set `$MCADDR` and `$MCPORT` to configure connection target:  
+`MCADDR="example.org" MCPORT="9001" devbox run bot`
+
+Defaults are:
+
+- MCADDR=`172.17.0.1`
+- MCPORT=`25565`
+
 ### Server
 
 Execute `devbox run server` to start a local test server.
